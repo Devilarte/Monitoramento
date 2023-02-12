@@ -1304,7 +1304,7 @@ zabbix_export:
                 value: '{$NET.IF.IFTYPE.NOT_MATCHES}'
                 operator: NOT_MATCHES_REGEX
                 formulaid: L
-          description: 'Descobrindo interfaces deIF-MIB.'
+          description: 'Descobrindo interfaces de IF-MIB.'
           item_prototypes:
             -
               uuid: f499f2a08c364fe6b7ba7c2edbeaa25a
