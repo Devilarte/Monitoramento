@@ -3,24 +3,18 @@
 
 ## Overview
 
-For Zabbix version: 6.2 and higher  
-The template for monitoring Ethernet router MikroTik CCR1036-8G-2S+.
+Versão do Zabbix: 6.0 e superiores  
+O modelo para monitorar o roteadores MikroTik CCR1036-8G-2S+.
 
-1U rackmount, 8x Gigabit Ethernet, 2xSFP+ cages, LCD, 36 cores x 1.2GHz CPU, 4GB RAM, 41.5mpps fastpath, Up to 28Gbit/s throughput, RouterOS L6, Dual PSU
-
-## Setup
+## Instalação
 
 > See [Zabbix template operation](https://www.zabbix.com/documentation/6.2/manual/config/templates_out_of_the_box/network_devices) for basic instructions.
 
 Refer to the vendor documentation.
 
-## Zabbix configuration
+### Macros
 
-No specific Zabbix configuration is required.
-
-### Macros used
-
-|Name|Description|Default|
+|Nome|Descrição|Default|
 |----|-----------|-------|
 |{$CPU.UTIL.CRIT} |<p>-</p> |`90` |
 |{$ICMP_LOSS_WARN} |<p>-</p> |`20` |
@@ -56,13 +50,9 @@ No specific Zabbix configuration is required.
 |{$VFS.FS.PUSED.MAX.CRIT} |<p>-</p> |`90` |
 |{$VFS.FS.PUSED.MAX.WARN} |<p>-</p> |`80` |
 
-## Template links
+## Regras de Descoberta
 
-There are no template links in this template.
-
-## Discovery rules
-
-|Name|Description|Type|Key and additional info|
+|Nome|Descrição|Tipo|Chave e informações adicionais|
 |----|-----------|----|----|
 |AP channel discovery |<p>MIKROTIK-MIB::mtxrWlAp</p> |SNMP |mtxrWlAp.discovery<p>**Filter**:</p>AND <p>- {#IFTYPE} MATCHES_REGEX `^71$`</p><p>- {#IFADMINSTATUS} MATCHES_REGEX `^1$`</p> |
 |CAPsMAN AP channel discovery |<p>MIKROTIK-MIB::mtxrWlCMChannel</p> |SNMP |mtxrWlCMChannel.discovery<p>**Filter**:</p>AND <p>- {#IFTYPE} MATCHES_REGEX `^1$`</p><p>- {#IFNAME} MATCHES_REGEX `{$IFNAME.WIFI.MATCHES}`</p> |
@@ -73,9 +63,9 @@ There are no template links in this template.
 |Temperature CPU discovery |<p>MIKROTIK-MIB::mtxrHlProcessorTemperature</p><p>Since temperature of CPU is not available on all Mikrotik hardware, this is done to avoid unsupported items.</p> |SNMP |mtxrHlProcessorTemperature.discovery |
 |Temperature sensor discovery |<p>MIKROTIK-MIB::mtxrHlTemperature</p><p>Since temperature sensor is not available on all Mikrotik hardware, this is done to avoid unsupported items.</p> |SNMP |mtxrHlTemperature.discovery |
 
-## Items collected
+## Itens
 
-|Group|Name|Description|Type|Key and additional info|
+|Group|Nome|Descrição|Tipo|Chave e informações adicionais|
 |-----|----|-----------|----|---------------------|
 |CPU |#{#SNMPINDEX}: CPU utilization |<p>MIB: HOST-RESOURCES-MIB</p><p>The average, over the last minute, of the percentage of time that this processor was not idle. Implementations may approximate this one minute smoothing period if necessary.</p> |SNMP |system.cpu.util[hrProcessorLoad.{#SNMPINDEX}] |
 |General |SNMP traps (fallback) |<p>The item is used to collect all SNMP traps unmatched by other snmptrap items</p> |SNMP_TRAP |snmptrap.fallback |
@@ -124,9 +114,9 @@ There are no template links in this template.
 |Wireless |Interface {#IFNAME}({#IFALIAS}): AP registered clients |<p>MIB: MIKROTIK-MIB</p><p>mtxrWlCMRegClientCount Client established connection to AP, but didn't finish all authentication procedures for full connection.</p> |SNMP |ssid.regclient[mtxrWlCMRegClientCount.{#SNMPINDEX}] |
 |Wireless |Interface {#IFNAME}({#IFALIAS}): AP authenticated clients |<p>MIB: MIKROTIK-MIB</p><p>mtxrWlCMAuthClientCount Number of authentication clients.</p> |SNMP |ssid.authclient[mtxrWlCMAuthClientCount.{#SNMPINDEX}] |
 
-## Triggers
+## Gatilhos (Triggers)
 
-|Name|Description|Expression|Severity|Dependencies and additional info|
+|Nome|Descrição|Expressão|Severidade|Dependências  e informações adicionais||
 |----|-----------|----|----|----|
 |#{#SNMPINDEX}: High CPU utilization |<p>CPU utilization is too high. The system might be slow to respond.</p> |`min(/MikroTik CCR1036-8G-2S SNMP/system.cpu.util[hrProcessorLoad.{#SNMPINDEX}],5m)>{$CPU.UTIL.CRIT}` |WARNING | |
 |System name has changed |<p>System name has changed. Ack to close.</p> |`last(/MikroTik CCR1036-8G-2S SNMP/system.name,#1)<>last(/MikroTik CCR1036-8G-2S SNMP/system.name,#2) and length(last(/MikroTik CCR1036-8G-2S SNMP/system.name))>0` |INFO |<p>Manual close: YES</p> |
@@ -157,11 +147,6 @@ There are no template links in this template.
 |Interface {#IFNAME}({#IFALIAS}): LTE modem SINR is low |<p>-</p> |`max(/MikroTik CCR1036-8G-2S SNMP/lte.modem.sinr[mtxrLTEModemSignalSINR.{#SNMPINDEX}],5m) < {$LTEMODEM.SINR.MIN.WARN}` |WARNING | |
 |Interface {#IFNAME}({#IFALIAS}): AP interface {#IFNAME}({#IFALIAS}) is not running |<p>Access point interface can be not running by different reasons - disabled interface, power off, network link down.</p> |`last(/MikroTik CCR1036-8G-2S SNMP/ssid.state[mtxrWlCMState.{#SNMPINDEX}])<>"running-ap"` |WARNING | |
 
-## Feedback
-
-Please report any issues with the template at https://support.zabbix.com
-
-
-## References
+## Referências
 
 https://mikrotik.com/product/CCR1036-8G-2Splus
