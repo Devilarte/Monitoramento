@@ -1,2 +1,2 @@
 # Monitoramento
-Monitoramento - OK Telecom PB
+Monitoramento | OK Telecom PB
