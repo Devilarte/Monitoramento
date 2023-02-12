@@ -44,9 +44,9 @@ zabbix_export:
             -
               uuid: 00453dcba3e74c4cb1bfce45c0d29590
               expression: 'max(/MikroTik CCR1036-8G-2S SNMP/icmpping,#3)=0'
-              name: 'UnDisponível by ICMP ping'
+              name: 'Indisponível por ping ICMP'
               priority: HIGH
-              description: 'Last three attempts returned timeout.  Please check device connectivity.'
+              description: 'As últimas três tentativas retornaram o tempo limite. Verifique a conectividade do dispositivo.'
               tags:
                 -
                   tag: scope
@@ -70,12 +70,12 @@ zabbix_export:
             -
               uuid: ef9c639da1fb4c7d9e9082b76468353e
               expression: 'min(/MikroTik CCR1036-8G-2S SNMP/icmppingloss,5m)>{$ICMP_LOSS_WARN} and min(/MikroTik CCR1036-8G-2S SNMP/icmppingloss,5m)<100'
-              name: 'High ICMP ping loss'
+              name: 'Alta Perda de ping ICMP'
               opdata: 'Loss: {ITEM.LASTVALUE1}'
               priority: WARNING
               dependencies:
                 -
-                  name: 'UnDisponível by ICMP ping'
+                  name: 'Indisponível por ping ICMP'
                   expression: 'max(/MikroTik CCR1036-8G-2S SNMP/icmpping,#3)=0'
               tags:
                 -
@@ -103,15 +103,15 @@ zabbix_export:
             -
               uuid: 8a7a50a814854217bae736f9766a9f42
               expression: 'avg(/MikroTik CCR1036-8G-2S SNMP/icmppingsec,5m)>{$ICMP_RESPONSE_TIME_WARN}'
-              name: 'High ICMP ping response time'
+              name: 'Tempo de resposta de ping ICMP alto'
               opdata: 'Value: {ITEM.LASTVALUE1}'
               priority: WARNING
               dependencies:
                 -
-                  name: 'High ICMP ping loss'
+                  name: 'Alta Perda de ping ICMP'
                   expression: 'min(/MikroTik CCR1036-8G-2S SNMP/icmppingloss,5m)>{$ICMP_LOSS_WARN} and min(/MikroTik CCR1036-8G-2S SNMP/icmppingloss,5m)<100'
                 -
-                  name: 'UnDisponível by ICMP ping'
+                  name: 'Indisponível por ping ICMP'
                   expression: 'max(/MikroTik CCR1036-8G-2S SNMP/icmpping,#3)=0'
               tags:
                 -
@@ -210,7 +210,7 @@ zabbix_export:
               name: 'Firmware has changed'
               opdata: 'Current value: {ITEM.LASTVALUE1}'
               priority: INFO
-              description: 'Firmware version has changed. Ack to close'
+              description: 'A versão do firmware foi alterada.'
               manual_close: 'YES'
               tags:
                 -
@@ -263,10 +263,10 @@ zabbix_export:
             -
               uuid: 79405589edba4a878d7d2ab5d0399076
               expression: 'last(/MikroTik CCR1036-8G-2S SNMP/system.hw.serialnumber,#1)<>last(/MikroTik CCR1036-8G-2S SNMP/system.hw.serialnumber,#2) and length(last(/MikroTik CCR1036-8G-2S SNMP/system.hw.serialnumber))>0'
-              name: 'Device has been replaced'
-              event_name: 'Device has been replaced (new serial number received)'
+              name: 'O dispositivo foi substituído'
+              event_name: 'O dispositivo foi substituído (new serial number received)'
               priority: INFO
-              description: 'Device serial number has changed. Ack to close'
+              description: 'O número de série do dispositivo foi alterado.'
               manual_close: 'YES'
               tags:
                 -
@@ -322,10 +322,10 @@ zabbix_export:
             -
               uuid: 3d3902234c994181819a311b9f1947dd
               expression: 'last(/MikroTik CCR1036-8G-2S SNMP/system.name,#1)<>last(/MikroTik CCR1036-8G-2S SNMP/system.name,#2) and length(last(/MikroTik CCR1036-8G-2S SNMP/system.name))>0'
-              name: 'System name has changed'
-              event_name: 'System name has changed (new name: {ITEM.VALUE})'
+              name: 'O nome do sistema mudou'
+              event_name: 'O nome do sistema mudou (new name: {ITEM.VALUE})'
               priority: INFO
-              description: 'System name has changed. Ack to close.'
+              description: 'O nome do sistema foi alterado.'
               manual_close: 'YES'
               tags:
                 -
@@ -383,13 +383,13 @@ zabbix_export:
             -
               uuid: 1ed2e0368bb94a4fbfa8a82764b3b40d
               expression: 'last(/MikroTik CCR1036-8G-2S SNMP/system.sw.os[mtxrLicVersion.0],#1)<>last(/MikroTik CCR1036-8G-2S SNMP/system.sw.os[mtxrLicVersion.0],#2) and length(last(/MikroTik CCR1036-8G-2S SNMP/system.sw.os[mtxrLicVersion.0]))>0'
-              name: 'Operating system description has changed'
+              name: 'A descrição do sistema operacional mudou'
               priority: INFO
-              description: 'Operating system description has changed. Possible reasons that system has been updated or replaced. Ack to close.'
+              description: 'A descrição do sistema operacional foi alterada. Possíveis razões pelas quais o sistema foi atualizado ou substituído.'
               manual_close: 'YES'
               dependencies:
                 -
-                  name: 'System name has changed'
+                  name: 'O nome do sistema mudou'
                   expression: 'last(/MikroTik CCR1036-8G-2S SNMP/system.name,#1)<>last(/MikroTik CCR1036-8G-2S SNMP/system.name,#2) and length(last(/MikroTik CCR1036-8G-2S SNMP/system.name))>0'
               tags:
                 -
@@ -421,14 +421,14 @@ zabbix_export:
             -
               uuid: 7b5ce136e1524c2c85febecb055e50f8
               expression: 'last(/MikroTik CCR1036-8G-2S SNMP/system.uptime[sysUpTime.0])<10m'
-              name: 'has been restarted'
-              event_name: '{HOST.NAME} has been restarted (uptime < 10m)'
+              name: 'Foi Reiniciado'
+              event_name: '{HOST.NAME} Foi Reiniciado (uptime < 10m)'
               priority: WARNING
-              description: 'Uptime is less than 10 minutes'
+              description: 'O tempo de atividade é inferior a 10 minutos'
               manual_close: 'YES'
               dependencies:
                 -
-                  name: 'No SNMP data collection'
+                  name: 'Nenhuma coleta de dados SNMP'
                   expression: 'max(/MikroTik CCR1036-8G-2S SNMP/zabbix[host,snmp,Disponível],{$SNMP.TIMEOUT})=0'
               tags:
                 -
@@ -503,7 +503,7 @@ zabbix_export:
               name: 'High memory utilization'
               event_name: 'High memory utilization (>{$MEMORY.UTIL.MAX}% for 5m)'
               priority: AVERAGE
-              description: 'The system is running out of free memory.'
+              description: 'O sistema está ficando sem memória livre.'
               tags:
                 -
                   tag: scope
@@ -536,13 +536,13 @@ zabbix_export:
             -
               uuid: 2fdfcfe056e848f2b0a628d87ad4aa6c
               expression: 'max(/MikroTik CCR1036-8G-2S SNMP/zabbix[host,snmp,Disponível],{$SNMP.TIMEOUT})=0'
-              name: 'No SNMP data collection'
+              name: 'Nenhuma coleta de dados SNMP'
               opdata: 'Current state: {ITEM.LASTVALUE1}'
               priority: WARNING
-              description: 'SNMP is Indisponível for polling. Please check device connectivity and SNMP settings.'
+              description: 'SNMP é Indisponível para polling. Verifique a conectividade do dispositivo e as configurações de SNMP.'
               dependencies:
                 -
-                  name: 'UnDisponível by ICMP ping'
+                  name: 'Indisponível por ping ICMP'
                   expression: 'max(/MikroTik CCR1036-8G-2S SNMP/icmpping,#3)=0'
               tags:
                 -
@@ -582,7 +582,7 @@ zabbix_export:
                   event_name: '#{#SNMPINDEX}: High CPU utilization (over {$CPU.UTIL.CRIT}% for 5m)'
                   opdata: 'Current utilization: {ITEM.LASTVALUE1}'
                   priority: WARNING
-                  description: 'CPU utilization is too high. The system might be slow to respond.'
+                  description: 'A utilização da CPU está muito alta. O sistema pode demorar para responder.'
                   tags:
                     -
                       tag: scope
@@ -639,11 +639,11 @@ zabbix_export:
                   expression: 'avg(/MikroTik CCR1036-8G-2S SNMP/sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}],5m)>{$TEMP_CRIT:"CPU"}'
                   recovery_mode: RECOVERY_EXPRESSION
                   recovery_expression: 'max(/MikroTik CCR1036-8G-2S SNMP/sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}],5m)<{$TEMP_CRIT:"CPU"}-3'
-                  name: 'CPU: Temperature is above critical threshold'
-                  event_name: 'CPU: Temperature is above critical threshold: >{$TEMP_CRIT:"CPU"}'
+                  name: 'CPU: Temperatura está acima do limite crítico'
+                  event_name: 'CPU: Temperatura está acima do limite crítico: >{$TEMP_CRIT:"CPU"}'
                   opdata: 'Current value: {ITEM.LASTVALUE1}'
                   priority: HIGH
-                  description: 'This trigger uses temperature sensor values as well as temperature sensor status if Disponível'
+                  description: 'Este gatilho (trigger) usa os valores do sensor de temperatura, bem como o status do sensor de temperatura, se disponível'
                   tags:
                     -
                       tag: scope
@@ -656,14 +656,14 @@ zabbix_export:
                   expression: 'avg(/MikroTik CCR1036-8G-2S SNMP/sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}],5m)>{$TEMP_WARN:"CPU"}'
                   recovery_mode: RECOVERY_EXPRESSION
                   recovery_expression: 'max(/MikroTik CCR1036-8G-2S SNMP/sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}],5m)<{$TEMP_WARN:"CPU"}-3'
-                  name: 'CPU: Temperature is above warning threshold'
-                  event_name: 'CPU: Temperature is above warning threshold: >{$TEMP_WARN:"CPU"}'
+                  name: 'CPU: Temperatura está acima do limite de aviso'
+                  event_name: 'CPU: Temperatura está acima do limite de aviso: >{$TEMP_WARN:"CPU"}'
                   opdata: 'Current value: {ITEM.LASTVALUE1}'
                   priority: WARNING
-                  description: 'This trigger uses temperature sensor values as well as temperature sensor status if Disponível'
+                  description: 'Este gatilho (trigger) usa os valores do sensor de temperatura, bem como o status do sensor de temperatura, se disponível'
                   dependencies:
                     -
-                      name: 'CPU: Temperature is above critical threshold'
+                      name: 'CPU: Temperatura está acima do limite crítico'
                       expression: 'avg(/MikroTik CCR1036-8G-2S SNMP/sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}],5m)>{$TEMP_CRIT:"CPU"}'
                       recovery_expression: 'max(/MikroTik CCR1036-8G-2S SNMP/sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}],5m)<{$TEMP_CRIT:"CPU"}-3'
                   tags:
@@ -678,8 +678,8 @@ zabbix_export:
                   expression: 'avg(/MikroTik CCR1036-8G-2S SNMP/sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}],5m)<{$TEMP_CRIT_LOW:"CPU"}'
                   recovery_mode: RECOVERY_EXPRESSION
                   recovery_expression: 'min(/MikroTik CCR1036-8G-2S SNMP/sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}],5m)>{$TEMP_CRIT_LOW:"CPU"}+3'
-                  name: 'CPU: Temperature is too low'
-                  event_name: 'CPU: Temperature is too low: <{$TEMP_CRIT_LOW:"CPU"}'
+                  name: 'CPU: Temperatura está muito baixa'
+                  event_name: 'CPU: Temperatura está muito baixa: <{$TEMP_CRIT_LOW:"CPU"}'
                   opdata: 'Current value: {ITEM.LASTVALUE1}'
                   priority: AVERAGE
                   tags:
@@ -730,11 +730,11 @@ zabbix_export:
                   expression: 'avg(/MikroTik CCR1036-8G-2S SNMP/sensor.temp.value[mtxrHlTemperature.{#SNMPINDEX}],5m)>{$TEMP_CRIT:"Device"}'
                   recovery_mode: RECOVERY_EXPRESSION
                   recovery_expression: 'max(/MikroTik CCR1036-8G-2S SNMP/sensor.temp.value[mtxrHlTemperature.{#SNMPINDEX}],5m)<{$TEMP_CRIT:"Device"}-3'
-                  name: 'Device: Temperature is above critical threshold'
-                  event_name: 'Device: Temperature is above critical threshold: >{$TEMP_CRIT:"Device"}'
+                  name: 'Dispositivo: Temperatura está acima do limite crítico'
+                  event_name: 'Dispositivo: Temperatura está acima do limite crítico: >{$TEMP_CRIT:"Device"}'
                   opdata: 'Current value: {ITEM.LASTVALUE1}'
                   priority: HIGH
-                  description: 'This trigger uses temperature sensor values as well as temperature sensor status if Disponível'
+                  description: 'Este gatilho (trigger) usa os valores do sensor de temperatura, bem como o status do sensor de temperatura, se disponível'
                   tags:
                     -
                       tag: scope
@@ -747,14 +747,14 @@ zabbix_export:
                   expression: 'avg(/MikroTik CCR1036-8G-2S SNMP/sensor.temp.value[mtxrHlTemperature.{#SNMPINDEX}],5m)>{$TEMP_WARN:"Device"}'
                   recovery_mode: RECOVERY_EXPRESSION
                   recovery_expression: 'max(/MikroTik CCR1036-8G-2S SNMP/sensor.temp.value[mtxrHlTemperature.{#SNMPINDEX}],5m)<{$TEMP_WARN:"Device"}-3'
-                  name: 'Device: Temperature is above warning threshold'
-                  event_name: 'Device: Temperature is above warning threshold: >{$TEMP_WARN:"Device"}'
+                  name: 'Dispositivo: Temperatura está acima do limite de aviso'
+                  event_name: 'Dispositivo: Temperatura está acima do limite de aviso: >{$TEMP_WARN:"Device"}'
                   opdata: 'Current value: {ITEM.LASTVALUE1}'
                   priority: WARNING
-                  description: 'This trigger uses temperature sensor values as well as temperature sensor status if Disponível'
+                  description: 'Este gatilho (trigger) usa os valores do sensor de temperatura, bem como o status do sensor de temperatura, se disponível'
                   dependencies:
                     -
-                      name: 'Device: Temperature is above critical threshold'
+                      name: 'Dispositivo: Temperatura está acima do limite crítico'
                       expression: 'avg(/MikroTik CCR1036-8G-2S SNMP/sensor.temp.value[mtxrHlTemperature.{#SNMPINDEX}],5m)>{$TEMP_CRIT:"Device"}'
                       recovery_expression: 'max(/MikroTik CCR1036-8G-2S SNMP/sensor.temp.value[mtxrHlTemperature.{#SNMPINDEX}],5m)<{$TEMP_CRIT:"Device"}-3'
                   tags:
@@ -769,8 +769,8 @@ zabbix_export:
                   expression: 'avg(/MikroTik CCR1036-8G-2S SNMP/sensor.temp.value[mtxrHlTemperature.{#SNMPINDEX}],5m)<{$TEMP_CRIT_LOW:"Device"}'
                   recovery_mode: RECOVERY_EXPRESSION
                   recovery_expression: 'min(/MikroTik CCR1036-8G-2S SNMP/sensor.temp.value[mtxrHlTemperature.{#SNMPINDEX}],5m)>{$TEMP_CRIT_LOW:"Device"}+3'
-                  name: 'Device: Temperature is too low'
-                  event_name: 'Device: Temperature is too low: <{$TEMP_CRIT_LOW:"Device"}'
+                  name: 'Dispositivo: Temperatura está muito baixa'
+                  event_name: 'Dispositivo: Temperatura está muito baixa: <{$TEMP_CRIT_LOW:"Device"}'
                   opdata: 'Current value: {ITEM.LASTVALUE1}'
                   priority: AVERAGE
                   tags:
@@ -1230,9 +1230,9 @@ zabbix_export:
                 -
                   uuid: 587ccbe7d604489783b66411a3b21cb1
                   expression: 'last(/MikroTik CCR1036-8G-2S SNMP/ssid.state[mtxrWlCMState.{#SNMPINDEX}])<>"running-ap"'
-                  name: 'Interface {#IFNAME}({#IFALIAS}): AP interface {#IFNAME}({#IFALIAS}) is not running'
+                  name: 'Interface {#IFNAME}({#IFALIAS}): Iinterface {#IFNAME}({#IFALIAS}) não está funcionando'
                   priority: WARNING
-                  description: 'Access point interface can be not running by different reasons - disabled interface, power off, network link down.'
+                  description: 'A interface do ponto de acesso pode não estar funcionando por diferentes motivos - interface desativada, desligamento, link de rede desativado.'
                   tags:
                     -
                       tag: scope
@@ -1547,14 +1547,14 @@ zabbix_export:
                   expression: '{$IFCONTROL:"{#IFNAME}"}=1 and last(/MikroTik CCR1036-8G-2S SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}])=2 and (last(/MikroTik CCR1036-8G-2S SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}],#1)<>last(/MikroTik CCR1036-8G-2S SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}],#2))'
                   recovery_mode: RECOVERY_EXPRESSION
                   recovery_expression: 'last(/MikroTik CCR1036-8G-2S SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}])<>2 or {$IFCONTROL:"{#IFNAME}"}=0'
-                  name: 'Interface {#IFNAME}({#IFALIAS}): Link down'
+                  name: 'Interface {#IFNAME}({#IFALIAS}): Link Inativo'
                   opdata: 'Current state: {ITEM.LASTVALUE1}'
                   priority: AVERAGE
                   description: |
-                    This trigger expression works as follows:
-                    1. Can be triggered if operations status is down.
-                    2. {$IFCONTROL:"{#IFNAME}"}=1 - user can redefine Context macro to value - 0. That marks this interface as not important. No new trigger will be fired if this interface is down.
-                    3. {TEMPLATE_NAME:METRIC.diff()}=1) - trigger fires only if Status Operacional was up(1) sometime before. (So, do not fire 'ethernal off' interfaces.)
+                    Essa expressão de Gatilho (Trigger) funciona da seguinte maneira:
+                    1. Pode ser acionado se o status das operações estiver inativo.
+                    2. {$IFCONTROL:"{#IFNAME}"}=1 - o usuário pode redefinir macro de contexto para valor - 0. Isso marca essa interface como não importante. Nenhum novo gatilho será acionado se esta interface estiver inativa.
+                    3. {TEMPLATE_NAME:METRIC.diff()}=1) - gatilho (trigger) dispara somente se o Status Operacional foi Ativado(1) algum tempo antes. (Portanto, não dispare se interfaces 'ethernal off'.)
                     
                     WARNING: if closed manually - won't fire again on next poll, because of .diff.
                   manual_close: 'YES'
@@ -1612,14 +1612,14 @@ zabbix_export:
               recovery_expression: |
                 (change(/MikroTik CCR1036-8G-2S SNMP/net.if.speed[ifHighSpeed.{#SNMPINDEX}])>0 and last(/MikroTik CCR1036-8G-2S SNMP/net.if.speed[ifHighSpeed.{#SNMPINDEX}],#2)>0) or
                 (last(/MikroTik CCR1036-8G-2S SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}])=2)
-              name: 'Interface {#IFNAME}({#IFALIAS}): Ethernet has changed to lower speed than it was before'
+              name: 'Interface {#IFNAME}({#IFALIAS}): Ethernet Baixou a Velocidade'
               opdata: 'Current reported speed: {ITEM.LASTVALUE1}'
               priority: INFO
-              description: 'This Ethernet connection has transitioned down from its known maximum speed. This might be a sign of autonegotiation issues. Ack to close.'
+              description: 'Esta conexão Ethernet foi reduzida de sua velocidade máxima conhecida. Isso pode ser um sinal de problemas de negociação automática.'
               manual_close: 'YES'
               dependencies:
                 -
-                  name: 'Interface {#IFNAME}({#IFALIAS}): Link down'
+                  name: 'Interface {#IFNAME}({#IFALIAS}): Link Inativo'
                   expression: '{$IFCONTROL:"{#IFNAME}"}=1 and last(/MikroTik CCR1036-8G-2S SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}])=2 and (last(/MikroTik CCR1036-8G-2S SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}],#1)<>last(/MikroTik CCR1036-8G-2S SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}],#2))'
                   recovery_expression: 'last(/MikroTik CCR1036-8G-2S SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}])<>2 or {$IFCONTROL:"{#IFNAME}"}=0'
               tags:
@@ -1637,14 +1637,14 @@ zabbix_export:
                 avg(/MikroTik CCR1036-8G-2S SNMP/net.if.in[ifHCInOctets.{#SNMPINDEX}],15m)<(({$IF.UTIL.MAX:"{#IFNAME}"}-3)/100)*last(/MikroTik CCR1036-8G-2S SNMP/net.if.speed[ifHighSpeed.{#SNMPINDEX}]) and
                 avg(/MikroTik CCR1036-8G-2S SNMP/net.if.out[ifHCOutOctets.{#SNMPINDEX}],15m)<(({$IF.UTIL.MAX:"{#IFNAME}"}-3)/100)*last(/MikroTik CCR1036-8G-2S SNMP/net.if.speed[ifHighSpeed.{#SNMPINDEX}])
               name: 'Interface {#IFNAME}({#IFALIAS}): High bandwidth usage'
-              event_name: 'Interface {#IFNAME}({#IFALIAS}): High bandwidth usage (>{$IF.UTIL.MAX:"{#IFNAME}"}%)'
+              event_name: 'Interface {#IFNAME}({#IFALIAS}): Alto uso de Banda(>{$IF.UTIL.MAX:"{#IFNAME}"}%)'
               opdata: 'In: {ITEM.LASTVALUE1}, out: {ITEM.LASTVALUE3}, speed: {ITEM.LASTVALUE2}'
               priority: WARNING
-              description: 'The network interface utilization is close to its estimated maximum bandwidth.'
+              description: 'A utilização da interface de rede está próxima de sua largura de banda máxima estimada.'
               manual_close: 'YES'
               dependencies:
                 -
-                  name: 'Interface {#IFNAME}({#IFALIAS}): Link down'
+                  name: 'Interface {#IFNAME}({#IFALIAS}): Link Inativo'
                   expression: '{$IFCONTROL:"{#IFNAME}"}=1 and last(/MikroTik CCR1036-8G-2S SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}])=2 and (last(/MikroTik CCR1036-8G-2S SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}],#1)<>last(/MikroTik CCR1036-8G-2S SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}],#2))'
                   recovery_expression: 'last(/MikroTik CCR1036-8G-2S SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}])<>2 or {$IFCONTROL:"{#IFNAME}"}=0'
               tags:
@@ -1660,15 +1660,15 @@ zabbix_export:
               recovery_expression: |
                 max(/MikroTik CCR1036-8G-2S SNMP/net.if.in.errors[ifInErrors.{#SNMPINDEX}],5m)<{$IF.ERRORS.WARN:"{#IFNAME}"}*0.8
                 and max(/MikroTik CCR1036-8G-2S SNMP/net.if.out.errors[ifOutErrors.{#SNMPINDEX}],5m)<{$IF.ERRORS.WARN:"{#IFNAME}"}*0.8
-              name: 'Interface {#IFNAME}({#IFALIAS}): High error rate'
-              event_name: 'Interface {#IFNAME}({#IFALIAS}): High error rate (>{$IF.ERRORS.WARN:"{#IFNAME}"} for 5m)'
+              name: 'Interface {#IFNAME}({#IFALIAS}): Alta Taxa de Erro'
+              event_name: 'Interface {#IFNAME}({#IFALIAS}): Alta Taxa de Erro (>{$IF.ERRORS.WARN:"{#IFNAME}"} for 5m)'
               opdata: 'errors in: {ITEM.LASTVALUE1}, errors out: {ITEM.LASTVALUE2}'
               priority: WARNING
-              description: 'Recovers when below 80% of {$IF.ERRORS.WARN:"{#IFNAME}"} threshold'
+              description: 'Recupera quando abaixo de 80% de {$IF.ERRORS.WARN:"{#IFNAME}"} threshold'
               manual_close: 'YES'
               dependencies:
                 -
-                  name: 'Interface {#IFNAME}({#IFALIAS}): Link down'
+                  name: 'Interface {#IFNAME}({#IFALIAS}): Link Inativo'
                   expression: '{$IFCONTROL:"{#IFNAME}"}=1 and last(/MikroTik CCR1036-8G-2S SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}])=2 and (last(/MikroTik CCR1036-8G-2S SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}],#1)<>last(/MikroTik CCR1036-8G-2S SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}],#2))'
                   recovery_expression: 'last(/MikroTik CCR1036-8G-2S SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}])<>2 or {$IFCONTROL:"{#IFNAME}"}=0'
               tags:
@@ -1821,15 +1821,15 @@ zabbix_export:
               expression: |
                 last(/MikroTik CCR1036-8G-2S SNMP/vfs.fs.pused[hrStorageSize.{#SNMPINDEX}])>{$VFS.FS.PUSED.MAX.CRIT:"Disk-{#SNMPINDEX}"} and
                 ((last(/MikroTik CCR1036-8G-2S SNMP/vfs.fs.total[hrStorageSize.{#SNMPINDEX}])-last(/MikroTik CCR1036-8G-2S SNMP/vfs.fs.used[hrStorageSize.{#SNMPINDEX}]))<5G or timeleft(/MikroTik CCR1036-8G-2S SNMP/vfs.fs.pused[hrStorageSize.{#SNMPINDEX}],1h,100)<1d)
-              name: 'Disk-{#SNMPINDEX}: Disk space is critically low'
-              event_name: 'Disk-{#SNMPINDEX}: Disk space is critically low (used > {$VFS.FS.PUSED.MAX.CRIT:"Disk-{#SNMPINDEX}"}%)'
+              name: 'Disk-{#SNMPINDEX}: O espaço em disco está criticamente baixo'
+              event_name: 'Disk-{#SNMPINDEX}: O espaço em disco está criticamente baixo (used > {$VFS.FS.PUSED.MAX.CRIT:"Disk-{#SNMPINDEX}"}%)'
               opdata: 'Space used: {ITEM.LASTVALUE3} of {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
               priority: AVERAGE
               description: |
-                Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"Disk-{#SNMPINDEX}"}.
-                 Second condition should be one of the following:
-                 - The disk free space is less than 5G.
-                 - The disk will be full in less than 24 hours.
+                Duas condições devem corresponder: primeiro, a utilização do espaço deve estar acima {$VFS.FS.PUSED.MAX.CRIT:"Disk-{#SNMPINDEX}"}.
+                 A segunda condição deve ser uma das seguintes:
+                 - O espaço livre em disco é inferior a 5G.
+                 - O disco ficará cheio em menos de 24 horas.
               manual_close: 'YES'
               tags:
                 -
@@ -1843,19 +1843,19 @@ zabbix_export:
               expression: |
                 last(/MikroTik CCR1036-8G-2S SNMP/vfs.fs.pused[hrStorageSize.{#SNMPINDEX}])>{$VFS.FS.PUSED.MAX.WARN:"Disk-{#SNMPINDEX}"} and
                 ((last(/MikroTik CCR1036-8G-2S SNMP/vfs.fs.total[hrStorageSize.{#SNMPINDEX}])-last(/MikroTik CCR1036-8G-2S SNMP/vfs.fs.used[hrStorageSize.{#SNMPINDEX}]))<10G or timeleft(/MikroTik CCR1036-8G-2S SNMP/vfs.fs.pused[hrStorageSize.{#SNMPINDEX}],1h,100)<1d)
-              name: 'Disk-{#SNMPINDEX}: Disk space is low'
-              event_name: 'Disk-{#SNMPINDEX}: Disk space is low (used > {$VFS.FS.PUSED.MAX.WARN:"Disk-{#SNMPINDEX}"}%)'
+              name: 'Disk-{#SNMPINDEX}: O espaço em disco está baixo'
+              event_name: 'Disk-{#SNMPINDEX}: O espaço em disco está baixo (used > {$VFS.FS.PUSED.MAX.WARN:"Disk-{#SNMPINDEX}"}%)'
               opdata: 'Space used: {ITEM.LASTVALUE3} of {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
               priority: WARNING
               description: |
-                Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.WARN:"Disk-{#SNMPINDEX}"}.
-                 Second condition should be one of the following:
-                 - The disk free space is less than 10G.
-                 - The disk will be full in less than 24 hours.
+                Duas condições devem corresponder: primeiro, a utilização do espaço deve estar acima {$VFS.FS.PUSED.MAX.WARN:"Disk-{#SNMPINDEX}"}.
+                 A segunda condição deve ser uma das seguintes:
+                 - O espaço livre em disco é inferior a 10G.
+                 - O disco ficará cheio em menos de 24 horas.
               manual_close: 'YES'
               dependencies:
                 -
-                  name: 'Disk-{#SNMPINDEX}: Disk space is critically low'
+                  name: 'Disk-{#SNMPINDEX}: O espaço em disco está criticamente baixo'
                   expression: |
                     last(/MikroTik CCR1036-8G-2S SNMP/vfs.fs.pused[hrStorageSize.{#SNMPINDEX}])>{$VFS.FS.PUSED.MAX.CRIT:"Disk-{#SNMPINDEX}"} and
                     ((last(/MikroTik CCR1036-8G-2S SNMP/vfs.fs.total[hrStorageSize.{#SNMPINDEX}])-last(/MikroTik CCR1036-8G-2S SNMP/vfs.fs.used[hrStorageSize.{#SNMPINDEX}]))<5G or timeleft(/MikroTik CCR1036-8G-2S SNMP/vfs.fs.pused[hrStorageSize.{#SNMPINDEX}],1h,100)<1d)
