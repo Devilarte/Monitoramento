@@ -94,7 +94,7 @@ O modelo para monitorar o roteadores MikroTik CCR1036-8G-2S+.
 
 ## Gatilhos (Triggers)
 
-|Nome|Descrição|Expressão|Severidade|Dependências  e informações adicionais||
+|Nome|Descrição|Expressão|Severidade|Dependências  e informações adicionais|
 |----|-----------|----|----|----|
 |#{#SNMPINDEX}: High CPU utilization |<p>CPU utilization is too high. The system might be slow to respond.</p> |`min(/MikroTik CCR1036-8G-2S SNMP/system.cpu.util[hrProcessorLoad.{#SNMPINDEX}],5m)>{$CPU.UTIL.CRIT}` |WARNING | |
 |System name has changed |<p>System name has changed. Ack to close.</p> |`last(/MikroTik CCR1036-8G-2S SNMP/system.name,#1)<>last(/MikroTik CCR1036-8G-2S SNMP/system.name,#2) and length(last(/MikroTik CCR1036-8G-2S SNMP/system.name))>0` |INFO |<p>Manual close: YES</p> |
