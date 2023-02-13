@@ -1,50 +1,46 @@
 zabbix_export:
   version: '6.0'
-  date: '2022-04-06T19:55:34Z'
+  date: '2023-02-13T04:42:02Z'
   groups:
     -
-      uuid: 36bff6c29af64692839d077febfc7079
-      name: 'Templates/Network devices'
+      uuid: 789a15bd6ca14cc9a4fe98a525bc94b3
+      name: 'OK Telecom PB - Templates'
   templates:
     -
-      uuid: 7f44e67e3f564ec9894c9142d7276553
-      template: 'OKTelecomPB-CCR1036-8G-2S'
-      name: 'MikroTik CCR1036-8G-2S+ SNMP'
+      uuid: 7b3ecb24366f4685970df8e1143323f0
+      template: 'MikroTik CCR1036-8G-2SPlus - Full'
+      name: 'MikroTik CCR1036-8G-2SPlus - Full'
       description: |
-        Template OK Telecom PB para roteador MikroTik CCR1036-8G-2S+.
+        OK Telecom PB - Provedor de Internet
+        Template para Monitoramento de roteador MikroTik CCR1036-8G-2S+.
         
-        MIBs usados:
+        MIBs utilizados:
         HOST-RESOURCES-MIB
         SNMPv2-MIB
         MIKROTIK-MIB
         IF-MIB
       groups:
         -
-          name: 'Templates/Network devices'
-## ITENS
+          name: 'OK Telecom PB - Templates'
       items:
         -
-## ICMP PING (INICIO)
-          uuid: d7b2d9c7f8dc4b7a8ff57b129af585b2
-          name: 'ICMP Ping'
+          uuid: ee528734341c4cf8815442ca2762ad56
+          name: 'ICMP - Ping:'
           type: SIMPLE
           key: icmpping
-          history: 1w
+          history: 7d
+          trends: 90d
           valuemap:
-            name: 'Service state'
+            name: 'Estado Serviço'
           tags:
             -
-              tag: Aplicação
+              tag: Informações
               value: ICMP
-            -
-              tag: Dispositivo
-              value: Saúde
-## TRIGGER ICMP
           triggers:
             -
-              uuid: 00453dcba3e74c4cb1bfce45c0d29590
-              expression: 'max(/OKTelecomPB-CCR1036-8G-2S/icmpping,#3)=0'
-              name: 'ICMP Indisponível por Ping'
+              uuid: 151029088e374c23bb89abe498da70ef
+              expression: 'max(/MikroTik CCR1036-8G-2SPlus - Full/icmpping,#3)=0'
+              name: 'Indisponível por ping ICMP'
               priority: HIGH
               description: 'As últimas três tentativas retornaram o tempo limite. Verifique a conectividade do dispositivo.'
               tags:
@@ -52,32 +48,29 @@ zabbix_export:
                   tag: scope
                   value: availability
         -
-## ICMP PING LOSS (INICIO)
-          uuid: d6a55e92ef1f49669df5641093aefbdd
-          name: 'ICMP Perda'
+          uuid: 20177d9560fd41518274117a8573fcbf
+          name: 'ICMP - Perda:'
           type: SIMPLE
           key: icmppingloss
-          history: 1w
+          history: 7d
+          trends: 90d
           value_type: FLOAT
           units: '%'
           tags:
             -
-              tag: Aplicação
+              tag: Informações
               value: ICMP
-            -
-              tag: Dispositivo
-              value: Saúde
           triggers:
             -
-              uuid: ef9c639da1fb4c7d9e9082b76468353e
-              expression: 'min(/OKTelecomPB-CCR1036-8G-2S/icmppingloss,5m)>{$ICMP_LOSS_WARN} and min(/OKTelecomPB-CCR1036-8G-2S/icmppingloss,5m)<100'
-              name: 'ICMP Alta Perda de Ping'
+              uuid: f719d0a102d84edb8c2672502ee28b25
+              expression: 'min(/MikroTik CCR1036-8G-2SPlus - Full/icmppingloss,5m)>{$ICMP_LOSS_WARN} and min(/MikroTik CCR1036-8G-2SPlus - Full/icmppingloss,5m)<100'
+              name: 'Alta Perda de ping ICMP'
               opdata: 'Loss: {ITEM.LASTVALUE1}'
               priority: WARNING
               dependencies:
                 -
-                  name: 'ICMP Indisponível por Ping'
-                  expression: 'max(/OKTelecomPB-CCR1036-8G-2S/icmpping,#3)=0'
+                  name: 'Indisponível por ping ICMP'
+                  expression: 'max(/MikroTik CCR1036-8G-2SPlus - Full/icmpping,#3)=0'
               tags:
                 -
                   tag: scope
@@ -86,34 +79,32 @@ zabbix_export:
                   tag: scope
                   value: performance
         -
-          uuid: b784087e681644f68b96f4d7a041e57e
-          name: 'ICMP Tempo de Resposta'
+          uuid: 47ded308c77c4cbba98051665f09a378
+          name: 'ICMP - Tempo Resposta:'
           type: SIMPLE
           key: icmppingsec
-          history: 1w
+          history: 7d
+          trends: 90d
           value_type: FLOAT
           units: s
           tags:
             -
-              tag: component
-              value: health
-            -
-              tag: component
-              value: network
+              tag: Informações
+              value: ICMP
           triggers:
             -
-              uuid: 8a7a50a814854217bae736f9766a9f42
-              expression: 'avg(/OKTelecomPB-CCR1036-8G-2S/icmppingsec,5m)>{$ICMP_RESPONSE_TIME_WARN}'
-              name: 'ICMP Tempo de Resposta de Ping Alto'
+              uuid: acba03a0cc9a40fb89258e1ece7dce30
+              expression: 'avg(/MikroTik CCR1036-8G-2SPlus - Full/icmppingsec,5m)>{$ICMP_RESPONSE_TIME_WARN}'
+              name: 'Tempo de resposta de ping ICMP alto'
               opdata: 'Value: {ITEM.LASTVALUE1}'
               priority: WARNING
               dependencies:
                 -
-                  name: 'ICMP Alta Perda de Ping'
-                  expression: 'min(/OKTelecomPB-CCR1036-8G-2S/icmppingloss,5m)>{$ICMP_LOSS_WARN} and min(/OKTelecomPB-CCR1036-8G-2S/icmppingloss,5m)<100'
+                  name: 'Alta Perda de ping ICMP'
+                  expression: 'min(/MikroTik CCR1036-8G-2SPlus - Full/icmppingloss,5m)>{$ICMP_LOSS_WARN} and min(/MikroTik CCR1036-8G-2SPlus - Full/icmppingloss,5m)<100'
                 -
-                  name: 'ICMP Indisponível por Ping'
-                  expression: 'max(/OKTelecomPB-CCR1036-8G-2S/icmpping,#3)=0'
+                  name: 'Indisponível por ping ICMP'
+                  expression: 'max(/MikroTik CCR1036-8G-2SPlus - Full/icmpping,#3)=0'
               tags:
                 -
                   tag: scope
@@ -122,32 +113,29 @@ zabbix_export:
                   tag: scope
                   value: performance
         -
-          uuid: 972afbe794124caa8fd35b44856c4b73
-          name: 'SNMP traps (fallback)'
+          uuid: 5fc1581406334366ba038c350335c7af
+          name: 'SNMP - Traps:'
           type: SNMP_TRAP
           key: snmptrap.fallback
-          history: 2w
+          delay: '0'
+          history: 7d
           trends: '0'
           value_type: LOG
-          description: 'O item é usado para coletar todas as traps SNMP inigualáveis por outros itens de trap SNMP'
           logtimefmt: 'hh:mm:sszyyyy/MM/dd'
           tags:
             -
-              tag: component
-              value: network
+              tag: Informações
+              value: SNMP
         -
-          uuid: 451ed0953b82410797051f377fda6e5b
-          name: 'Detalhes de contato do sistema'
+          uuid: 1e20df1ba4f740768c5d167928b52a91
+          name: 'Sistema - Contato:'
           type: SNMP_AGENT
           snmp_oid: 1.3.6.1.2.1.1.4.0
           key: 'system.contact[sysContact.0]'
           delay: 15m
-          history: 2w
+          history: 7d
           trends: '0'
           value_type: CHAR
-          description: |
-            MIB: SNMPv2-MIB
-            A identificação textual da pessoa de contato, junto com informações sobre como entrar em contato com a mesma. Se nenhuma informação for inserida, o valor é a string de comprimento zero.
           inventory_link: CONTACT
           preprocessing:
             -
@@ -156,21 +144,18 @@ zabbix_export:
                 - 12h
           tags:
             -
-              tag: component
-              value: system
+              tag: Informações
+              value: Sistema
         -
-          uuid: 9264b3ce82d648fbb209fd11a0d7069c
-          name: 'Descrição do sistema'
+          uuid: 1e0feae3c04e4736bf7a4485e36be60e
+          name: 'Sistema - Descrição:'
           type: SNMP_AGENT
           snmp_oid: 1.3.6.1.2.1.1.1.0
           key: 'system.descr[sysDescr.0]'
           delay: 15m
-          history: 2w
+          history: 7d
           trends: '0'
           value_type: CHAR
-          description: |
-            MIB: SNMPv2-MIB
-            Uma descrição textual da entidade. Esse valor deve incluir o nome completo e a identificação da versão do tipo de hardware do sistema, sistema operacional do software e software de rede.
           preprocessing:
             -
               type: DISCARD_UNCHANGED_HEARTBEAT
@@ -178,21 +163,18 @@ zabbix_export:
                 - 12h
           tags:
             -
-              tag: component
-              value: system
+              tag: Informações
+              value: Sistema
         -
-          uuid: e565515e2bfe469db344bd78bdfcba74
-          name: 'Versão do Firmware'
+          uuid: a808f02d217e4b338fbd5d8f52474d7d
+          name: 'Dispositivo - Firmware:'
           type: SNMP_AGENT
           snmp_oid: 1.3.6.1.4.1.14988.1.1.7.4.0
           key: system.hw.firmware
           delay: 1h
-          history: 2w
+          history: 7d
           trends: '0'
           value_type: CHAR
-          description: |
-            MIB: MIKROTIK-MIB
-            Versão do Firmware Atual.
           preprocessing:
             -
               type: DISCARD_UNCHANGED_HEARTBEAT
@@ -200,29 +182,29 @@ zabbix_export:
                 - 1d
           tags:
             -
-              tag: component
-              value: system
+              tag: Informações
+              value: Sistema
           triggers:
             -
-              uuid: 26d7b5b5fc4149d4869a4e3a94173172
-              expression: 'last(/OKTelecomPB-CCR1036-8G-2S/system.hw.firmware,#1)<>last(/OKTelecomPB-CCR1036-8G-2S/system.hw.firmware,#2) and length(last(/OKTelecomPB-CCR1036-8G-2S/system.hw.firmware))>0'
-              name: 'Firmware mudou'
-              opdata: 'Current value: {ITEM.LASTVALUE1}'
+              uuid: a42442ce9d7d4a378964296eed6a6b33
+              expression: 'last(/MikroTik CCR1036-8G-2SPlus - Full/system.hw.firmware,#1)<>last(/MikroTik CCR1036-8G-2SPlus - Full/system.hw.firmware,#2) and length(last(/MikroTik CCR1036-8G-2SPlus - Full/system.hw.firmware))>0'
+              name: 'Firmware alterado'
+              opdata: 'Valor atual: {ITEM.LASTVALUE1}'
               priority: INFO
-              description: 'A versão do firmware foi alterada.'
+              description: 'Versão do firmware foi alterada. Aceite para fechar'
               manual_close: 'YES'
               tags:
                 -
                   tag: scope
                   value: notice
         -
-          uuid: 2ef71aac4f8b462cb4103327331c359c
-          name: 'Modelo do dispositivo'
+          uuid: 721918724f3f47189db3d73a51eed73e
+          name: 'Dispositivo - Modelo:'
           type: SNMP_AGENT
           snmp_oid: 1.3.6.1.2.1.1.1.0
           key: system.hw.model
           delay: 1h
-          history: 2w
+          history: 7d
           trends: '0'
           value_type: CHAR
           inventory_link: MODEL
@@ -233,21 +215,18 @@ zabbix_export:
                 - 1d
           tags:
             -
-              tag: component
-              value: system
+              tag: Informações
+              value: Dispositivo
         -
-          uuid: 5d766873d7ee41ddad6d90199c1e8a38
-          name: 'Número de Série'
+          uuid: 028dcc2c59f34754b646c0a07e6e4709
+          name: 'Dispositivo - N.º de Série:'
           type: SNMP_AGENT
           snmp_oid: 1.3.6.1.4.1.14988.1.1.7.3.0
           key: system.hw.serialnumber
           delay: 1h
-          history: 2w
+          history: 7d
           trends: '0'
           value_type: CHAR
-          description: |
-            MIB: MIKROTIK-MIB
-            Número de Série da RouterBOARD.
           inventory_link: SERIALNO_A
           preprocessing:
             -
@@ -256,34 +235,31 @@ zabbix_export:
                 - 1d
           tags:
             -
-              tag: component
-              value: system
+              tag: Informações
+              value: Dispositivo
           triggers:
             -
-              uuid: 79405589edba4a878d7d2ab5d0399076
-              expression: 'last(/OKTelecomPB-CCR1036-8G-2S/system.hw.serialnumber,#1)<>last(/OKTelecomPB-CCR1036-8G-2S/system.hw.serialnumber,#2) and length(last(/OKTelecomPB-CCR1036-8G-2S/system.hw.serialnumber))>0'
-              name: 'O dispositivo foi substituído'
-              event_name: 'O dispositivo foi substituído (novo número de série recebido)'
+              uuid: 2da3a78731324233be1563691f353d04
+              expression: 'last(/MikroTik CCR1036-8G-2SPlus - Full/system.hw.serialnumber,#1)<>last(/MikroTik CCR1036-8G-2SPlus - Full/system.hw.serialnumber,#2) and length(last(/MikroTik CCR1036-8G-2SPlus - Full/system.hw.serialnumber))>0'
+              name: 'Dispositivo foi alterado'
+              event_name: 'Dispositivo foi alterado (novo número de série recebido)'
               priority: INFO
-              description: 'O número de série do dispositivo foi alterado.'
+              description: 'Número de Série do dispositivo foi alterado. Aceite para fechar'
               manual_close: 'YES'
               tags:
                 -
                   tag: scope
                   value: notice
         -
-          uuid: b4c93df60aca48ffa7b7f67b58918b5f
-          name: 'Localização'
+          uuid: 966c104811674f4cbae586a8b5356247
+          name: 'Sistema - Localização:'
           type: SNMP_AGENT
           snmp_oid: 1.3.6.1.2.1.1.6.0
           key: 'system.location[sysLocation.0]'
           delay: 15m
-          history: 2w
+          history: 7d
           trends: '0'
           value_type: CHAR
-          description: |
-            MIB: SNMPv2-MIB
-            A localização física (ex., `telephone closet, 3rd floor'). Se o local for desconhecido, o valor é a string de comprimento zero.
           inventory_link: LOCATION
           preprocessing:
             -
@@ -292,21 +268,18 @@ zabbix_export:
                 - 12h
           tags:
             -
-              tag: component
-              value: system
+              tag: Informações
+              value: Sistema
         -
-          uuid: 74e4c3fb1719453faa539e5c4c03e725
-          name: 'Sistema'
+          uuid: 18bbaa17cf224712944aa4ccfd3c56f8
+          name: 'Sistema - Identificação:'
           type: SNMP_AGENT
           snmp_oid: 1.3.6.1.2.1.1.5.0
           key: system.name
           delay: 15m
-          history: 2w
+          history: 7d
           trends: '0'
           value_type: CHAR
-          description: |
-            MIB: SNMPv2-MIB
-            Um nome designado administrativamente. Por convenção, este é o nome de domínio completo. Se o nome for desconhecido, o valor é a string de comprimento zero.
           inventory_link: NAME
           preprocessing:
             -
@@ -315,16 +288,16 @@ zabbix_export:
                 - 12h
           tags:
             -
-              tag: component
-              value: system
+              tag: Informações
+              value: Sistema
           triggers:
             -
-              uuid: 3d3902234c994181819a311b9f1947dd
-              expression: 'last(/OKTelecomPB-CCR1036-8G-2S/system.name,#1)<>last(/OKTelecomPB-CCR1036-8G-2S/system.name,#2) and length(last(/OKTelecomPB-CCR1036-8G-2S/system.name))>0'
-              name: 'O nome do sistema mudou'
-              event_name: 'O nome do sistema mudou (new name: {ITEM.VALUE})'
+              uuid: f2d7211cd2ca476facec96075e06298c
+              expression: 'last(/MikroTik CCR1036-8G-2SPlus - Full/system.name,#1)<>last(/MikroTik CCR1036-8G-2SPlus - Full/system.name,#2) and length(last(/MikroTik CCR1036-8G-2SPlus - Full/system.name))>0'
+              name: 'Identificação alterada'
+              event_name: 'Identificação alterada (novo nome: {ITEM.VALUE})'
               priority: INFO
-              description: 'O nome do sistema foi alterado.'
+              description: 'Identificação alterada. Aceite para fechar'
               manual_close: 'YES'
               tags:
                 -
@@ -334,18 +307,15 @@ zabbix_export:
                   tag: scope
                   value: security
         -
-          uuid: 9a33a5e56bcf422fa357fdb664a93d03
-          name: 'System object ID'
+          uuid: a21804a0cb5549ea8f8b447802600aaa
+          name: 'Sistema - OID:'
           type: SNMP_AGENT
           snmp_oid: 1.3.6.1.2.1.1.2.0
           key: 'system.objectid[sysObjectID.0]'
           delay: 15m
-          history: 2w
+          history: 7d
           trends: '0'
           value_type: CHAR
-          description: |
-            MIB: SNMPv2-MIB
-            A identificação oficial do fornecedor do subsistema de gerenciamento de rede contido na entidade. Este valor é alocado dentro da subárvore das empresas SMI (1.3.6.1.4.1) e fornece um meio fácil e inequívoco de determinar`que tipo de caixa' está sendo gerenciado. Por exemplo, se o fornecedor`Flintstones, Inc.' foi atribuída a subárvore 1.3.6.1.4.1.4242, ela poderia atribuir o identificador 1.3.6.1.4.1.4242.1.1 ao seu `Fred Router'.
           preprocessing:
             -
               type: DISCARD_UNCHANGED_HEARTBEAT
@@ -353,21 +323,18 @@ zabbix_export:
                 - 12h
           tags:
             -
-              tag: component
-              value: system
+              tag: Informações
+              value: Sistema
         -
-          uuid: 56f7e706b7f84fdf827f5a14fb3bdc7c
-          name: 'Sistema Operacional'
+          uuid: 5f186d66075841689596629ffecd1d45
+          name: 'Sistema - SO:'
           type: SNMP_AGENT
           snmp_oid: 1.3.6.1.4.1.14988.1.1.4.4.0
           key: 'system.sw.os[mtxrLicVersion.0]'
           delay: 1h
-          history: 2w
+          history: 7d
           trends: '0'
           value_type: CHAR
-          description: |
-            MIB: MIKROTIK-MIB
-            Versão do Software.
           inventory_link: OS
           preprocessing:
             -
@@ -376,37 +343,34 @@ zabbix_export:
                 - 1d
           tags:
             -
-              tag: component
-              value: os
+              tag: Informações
+              value: Sistema
           triggers:
             -
-              uuid: 1ed2e0368bb94a4fbfa8a82764b3b40d
-              expression: 'last(/OKTelecomPB-CCR1036-8G-2S/system.sw.os[mtxrLicVersion.0],#1)<>last(/OKTelecomPB-CCR1036-8G-2S/system.sw.os[mtxrLicVersion.0],#2) and length(last(/OKTelecomPB-CCR1036-8G-2S/system.sw.os[mtxrLicVersion.0]))>0'
-              name: 'A descrição do sistema operacional mudou'
+              uuid: 855a1e17110e49eaaaf4dd263f16a591
+              expression: 'last(/MikroTik CCR1036-8G-2SPlus - Full/system.sw.os[mtxrLicVersion.0],#1)<>last(/MikroTik CCR1036-8G-2SPlus - Full/system.sw.os[mtxrLicVersion.0],#2) and length(last(/MikroTik CCR1036-8G-2SPlus - Full/system.sw.os[mtxrLicVersion.0]))>0'
+              name: 'Sistema Operacional alterado'
               priority: INFO
-              description: 'A descrição do sistema operacional foi alterada. Possíveis razões pelas quais o sistema foi atualizado ou substituído.'
+              description: 'Sistema Operacional alterado. Possíveis razões pelas quais o sistema foi atualizado ou substituído. Aceite para fechar'
               manual_close: 'YES'
               dependencies:
                 -
-                  name: 'O nome do sistema mudou'
-                  expression: 'last(/OKTelecomPB-CCR1036-8G-2S/system.name,#1)<>last(/OKTelecomPB-CCR1036-8G-2S/system.name,#2) and length(last(/OKTelecomPB-CCR1036-8G-2S/system.name))>0'
+                  name: 'Identificação alterada'
+                  expression: 'last(/MikroTik CCR1036-8G-2SPlus - Full/system.name,#1)<>last(/MikroTik CCR1036-8G-2SPlus - Full/system.name,#2) and length(last(/MikroTik CCR1036-8G-2SPlus - Full/system.name))>0'
               tags:
                 -
                   tag: scope
                   value: notice
         -
-          uuid: 95869b7593644ccebab3fc2bb81f493c
-          name: Uptime
+          uuid: 34d40f56c17541ddb276e773d0e39737
+          name: 'Sistema - Uptime:'
           type: SNMP_AGENT
           snmp_oid: 1.3.6.1.2.1.1.3.0
           key: 'system.uptime[sysUpTime.0]'
           delay: 30s
-          history: 2w
-          trends: 0d
+          history: 7d
+          trends: 90d
           units: uptime
-          description: |
-            MIB: SNMPv2-MIB
-            O tempo (em centésimos de segundo) desde a última reinicialização da parte de gerenciamento de rede do sistema.
           preprocessing:
             -
               type: MULTIPLIER
@@ -414,36 +378,34 @@ zabbix_export:
                 - '0.01'
           tags:
             -
-              tag: component
-              value: system
+              tag: Informações
+              value: Sistema
           triggers:
             -
-              uuid: 7b5ce136e1524c2c85febecb055e50f8
-              expression: 'last(/OKTelecomPB-CCR1036-8G-2S/system.uptime[sysUpTime.0])<10m'
-              name: 'Foi Reiniciado'
-              event_name: '{HOST.NAME} Foi Reiniciado (uptime < 10m)'
+              uuid: 75e9434ddcb34c5489190d8b6de07e87
+              expression: 'last(/MikroTik CCR1036-8G-2SPlus - Full/system.uptime[sysUpTime.0])<10m'
+              name: 'Foi reiniciado'
+              event_name: '{HOST.NAME} Foi reiniciado (uptime < 10m)'
               priority: WARNING
               description: 'O tempo de atividade é inferior a 10 minutos'
               manual_close: 'YES'
               dependencies:
                 -
                   name: 'Nenhuma coleta de dados SNMP'
-                  expression: 'max(/OKTelecomPB-CCR1036-8G-2S/zabbix[host,snmp,Disponível],{$SNMP.TIMEOUT})=0'
+                  expression: 'max(/MikroTik CCR1036-8G-2SPlus - Full/zabbix[host,snmp,available],{$SNMP.TIMEOUT})=0'
               tags:
                 -
                   tag: scope
                   value: notice
         -
-          uuid: 818712f7986b40e8a3ce3994f43199ea
-          name: 'Total de Memória'
+          uuid: 19a2d0e30b0c4123899147a6230863cf
+          name: 'Dispositivo - RAM Total:'
           type: SNMP_AGENT
           snmp_oid: 1.3.6.1.2.1.25.2.3.1.5.65536
           key: 'vm.memory.total[hrStorageSize.Memory]'
           history: 7d
+          trends: 90d
           units: B
-          description: |
-            MIB: HOST-RESOURCES-MIB
-            O tamanho do armazenamento representado por esta entrada, em unidades de hrStorageAllocationUnits. Este objeto é gravável para permitir a configuração remota do tamanho da área de armazenamento nos casos em que tal operação faz sentido e é possível no sistema subjacente. Por exemplo, a quantidade de memória principal alocada para um buffer pool pode ser modificada ou a quantidade de espaço em disco alocada para a memória virtual pode ser modificada.
           preprocessing:
             -
               type: MULTIPLIER
@@ -451,19 +413,17 @@ zabbix_export:
                 - '1024'
           tags:
             -
-              tag: component
-              value: memory
+              tag: Informações
+              value: RAM
         -
-          uuid: 0b3849a88cf9436284dea73e86f70405
-          name: 'Memória Usada'
+          uuid: 8b64d82e4b7b46a28cc88b1fc6c772d8
+          name: 'Dispositivo - RAM Utilizada Bytes:'
           type: SNMP_AGENT
           snmp_oid: 1.3.6.1.2.1.25.2.3.1.6.65536
           key: 'vm.memory.used[hrStorageUsed.Memory]'
           history: 7d
+          trends: 90d
           units: B
-          description: |
-            MIB: HOST-RESOURCES-MIB
-            A quantidade de armazenamento representada por esta entrada que é alocada, em unidades de hrStorageAllocationUnits.
           preprocessing:
             -
               type: MULTIPLIER
@@ -471,28 +431,28 @@ zabbix_export:
                 - '1024'
           tags:
             -
-              tag: component
-              value: memory
+              tag: Informações
+              value: RAM
         -
-          uuid: deb60e7c19b74431aed7b6c26fb7616b
-          name: 'Utilização de Memória'
+          uuid: a1a1e9109bb24cefb67b397dc94d3ed9
+          name: 'Dispositivo - RAM Utilizada %:'
           type: CALCULATED
           key: 'vm.memory.util[memoryUsedPercentage.Memory]'
           history: 7d
+          trends: 90d
           value_type: FLOAT
           units: '%'
           params: 'last(//vm.memory.used[hrStorageUsed.Memory])/last(//vm.memory.total[hrStorageSize.Memory])*100'
-          description: 'Utilização de memória em %'
           tags:
             -
-              tag: component
-              value: memory
+              tag: Informações
+              value: RAM
           triggers:
             -
-              uuid: 03cdc40813dd4d5093512db3c5e574ff
-              expression: 'min(/OKTelecomPB-CCR1036-8G-2S/vm.memory.util[memoryUsedPercentage.Memory],5m)>{$MEMORY.UTIL.MAX}'
-              name: 'Alta Utilização de Memória'
-              event_name: 'Alta Utilização de Memória (>{$MEMORY.UTIL.MAX}% for 5m)'
+              uuid: 9a83e6b6a0874a49a983cb610a7e0e50
+              expression: 'min(/MikroTik CCR1036-8G-2SPlus - Full/vm.memory.util[memoryUsedPercentage.Memory],5m)>{$MEMORY.UTIL.MAX}'
+              name: 'Uso de Memória Alto'
+              event_name: 'Uso de Memória Alto (mais de {$MEMORY.UTIL.MAX}% por 5m)'
               priority: AVERAGE
               description: 'O sistema está ficando sem memória livre.'
               tags:
@@ -503,59 +463,51 @@ zabbix_export:
                   tag: scope
                   value: performance
         -
-          uuid: 6fe6e7afa7bd42269e6b7e49661d1c3f
-          name: 'Disponibilidade do agente SNMP'
+          uuid: f77c57fb2dca4391ba2d741ef636b0cd
+          name: 'SNMP -  Agente:'
           type: INTERNAL
-          key: 'zabbix[host,snmp,Disponível]'
+          key: 'zabbix[host,snmp,available]'
           history: 7d
-          description: |
-            Disponibilidade de verificações SNMP no host. O valor deste item corresponde aos ícones de disponibilidade na lista de hosts.
-            Valor Possível:
-            0 - Indisponível
-            1 - Disponível
-            2 - Desconhecido
+          trends: 90d
           valuemap:
-            name: zabbix.host.Disponível
+            name: zabbix.host.available
           tags:
             -
-              tag: component
-              value: health
-            -
-              tag: component
-              value: network
+              tag: Informações
+              value: SNMP
           triggers:
             -
-              uuid: 2fdfcfe056e848f2b0a628d87ad4aa6c
-              expression: 'max(/OKTelecomPB-CCR1036-8G-2S/zabbix[host,snmp,Disponível],{$SNMP.TIMEOUT})=0'
+              uuid: b14b41ca31c342be803852075ff5c9f9
+              expression: 'max(/MikroTik CCR1036-8G-2SPlus - Full/zabbix[host,snmp,available],{$SNMP.TIMEOUT})=0'
               name: 'Nenhuma coleta de dados SNMP'
               opdata: 'Current state: {ITEM.LASTVALUE1}'
               priority: WARNING
-              description: 'SNMP é Indisponível para polling. Verifique a conectividade do dispositivo e as configurações de SNMP.'
+              description: 'O SNMP não está disponível para polling. Verifique a conectividade do dispositivo e as configurações de SNMP.'
               dependencies:
                 -
-                  name: 'ICMP Indisponível por Ping'
-                  expression: 'max(/OKTelecomPB-CCR1036-8G-2S/icmpping,#3)=0'
+                  name: 'Indisponível por ping ICMP'
+                  expression: 'max(/MikroTik CCR1036-8G-2SPlus - Full/icmpping,#3)=0'
               tags:
                 -
                   tag: scope
                   value: availability
       discovery_rules:
         -
-          uuid: c58edbe489db4e26a93a75c58c88a1f3
-          name: 'Descoberta de CPU'
+          uuid: c10d4bba94a54260853ce18bb4a1dbac
+          name: '01 - CPUs Carga'
           type: SNMP_AGENT
           snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.2.1.25.3.3.1.1]'
           key: hrProcessorLoad.discovery
           delay: 1h
-          description: 'HOST-RESOURCES-MIB::hrProcessorTable discovery'
           item_prototypes:
             -
-              uuid: 76610d269fa74931b5942475c179e840
-              name: '#{#SNMPINDEX}: CPU utilization'
+              uuid: d7d582f52ddd4c14ad45bbcf98e7cce3
+              name: 'CPU {#SNMPINDEX}:'
               type: SNMP_AGENT
               snmp_oid: '1.3.6.1.2.1.25.3.3.1.2.{#SNMPINDEX}'
               key: 'system.cpu.util[hrProcessorLoad.{#SNMPINDEX}]'
               history: 7d
+              trends: 90d
               value_type: FLOAT
               units: '%'
               description: |
@@ -563,25 +515,25 @@ zabbix_export:
                 A média, no último minuto, da porcentagem de tempo que esse processador não ficou ocioso. As implementações podem aproximar esse período de suavização de um minuto, se necessário.
               tags:
                 -
-                  tag: component
-                  value: cpu
+                  tag: Informações
+                  value: CPU
               trigger_prototypes:
                 -
-                  uuid: a9f3354cf2044306ba8ca1aae227ee60
-                  expression: 'min(/OKTelecomPB-CCR1036-8G-2S/system.cpu.util[hrProcessorLoad.{#SNMPINDEX}],5m)>{$CPU.UTIL.CRIT}'
-                  name: '#{#SNMPINDEX}: Alta utilização da CPU'
-                  event_name: '#{#SNMPINDEX}: Alta utilização da CPU (over {$CPU.UTIL.CRIT}% for 5m)'
-                  opdata: 'Current utilization: {ITEM.LASTVALUE1}'
+                  uuid: bc07372dff2f4f72a6b1b7c0e02f79c7
+                  expression: 'min(/MikroTik CCR1036-8G-2SPlus - Full/system.cpu.util[hrProcessorLoad.{#SNMPINDEX}],5m)>{$CPU.UTIL.CRIT}'
+                  name: '#{#SNMPINDEX}: Uso de CPU Alto'
+                  event_name: '#{#SNMPINDEX}: Uso de CPU Alto (mais de {$CPU.UTIL.CRIT}% por 5m)'
+                  opdata: 'Uso atual: {ITEM.LASTVALUE1}'
                   priority: WARNING
-                  description: 'A utilização da CPU está muito alta. O sistema pode demorar para responder.'
+                  description: 'Uso de CPU muito alta. O sistema pode demorar para responder.'
                   tags:
                     -
                       tag: scope
                       value: performance
           graph_prototypes:
             -
-              uuid: 58020e927fcb4113a0339a9f2458f711
-              name: '#{#SNMPINDEX}: CPU utilization'
+              uuid: 01ef650a4abb4a1f9ff59f507ba15528
+              name: '#{#SNMPINDEX}: Uso de CPU'
               ymin_type_1: FIXED
               ymax_type_1: FIXED
               graph_items:
@@ -589,32 +541,27 @@ zabbix_export:
                   drawtype: GRADIENT_LINE
                   color: 1A7C11
                   item:
-                    host: 'OKTelecomPB-CCR1036-8G-2S'
+                    host: 'MikroTik CCR1036-8G-2SPlus - Full'
                     key: 'system.cpu.util[hrProcessorLoad.{#SNMPINDEX}]'
         -
-          uuid: d86c3660acfb4595946453fce47eb8df
-          name: 'Descoberta de Temperatura CPU'
+          uuid: 43bfef9ab73c4111a6781bc0a6ed4831
+          name: '02 - CPUs Temperatura'
           type: SNMP_AGENT
           snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.14988.1.1.3.11]'
           key: mtxrHlProcessorTemperature.discovery
           delay: 1h
-          description: |
-            MIKROTIK-MIB::mtxrHlProcessorTemperature
-            Como a temperatura da CPU não está disponível em todos os hardwares do Mikrotik, isso é feito para evitar itens não suportados.
           item_prototypes:
             -
-              uuid: d46e25089d8144d1b56062cc2d3e9059
-              name: 'CPU: Temperatura'
+              uuid: 5a085632c4b54eb5a6ce87d2634f722c
+              name: 'CPU Temperatura:'
               type: SNMP_AGENT
               snmp_oid: '1.3.6.1.4.1.14988.1.1.3.11.{#SNMPINDEX}'
               key: 'sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}]'
               delay: 3m
+              history: 7d
+              trends: 90d
               value_type: FLOAT
               units: °C
-              description: |
-                MIB: MIKROTIK-MIB
-                mtxrHlProcessorTemperature Processor temperature in Celsius (degrees C).
-                Might be missing in entry models (RB750, RB450G..).
               preprocessing:
                 -
                   type: MULTIPLIER
@@ -622,19 +569,19 @@ zabbix_export:
                     - '0.1'
               tags:
                 -
-                  tag: component
-                  value: temperature
+                  tag: Informações
+                  value: CPU
               trigger_prototypes:
                 -
-                  uuid: f399cf1f48d24ec3b3f33159cb7b4fe0
-                  expression: 'avg(/OKTelecomPB-CCR1036-8G-2S/sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}],5m)>{$TEMP_CRIT:"CPU"}'
+                  uuid: b3ce44c470a64dc49bc169c06bf9761d
+                  expression: 'avg(/MikroTik CCR1036-8G-2SPlus - Full/sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}],5m)>{$TEMP_CRIT:"CPU"}'
                   recovery_mode: RECOVERY_EXPRESSION
-                  recovery_expression: 'max(/OKTelecomPB-CCR1036-8G-2S/sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}],5m)<{$TEMP_CRIT:"CPU"}-3'
-                  name: 'CPU: Temperatura está acima do limite crítico'
-                  event_name: 'CPU: Temperatura está acima do limite crítico: >{$TEMP_CRIT:"CPU"}'
-                  opdata: 'Current value: {ITEM.LASTVALUE1}'
+                  recovery_expression: 'max(/MikroTik CCR1036-8G-2SPlus - Full/sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}],5m)<{$TEMP_CRIT:"CPU"}-3'
+                  name: 'CPU: Temperatura acima do limite crítico'
+                  event_name: 'CPU: Temperatura acima do limite crítico: >{$TEMP_CRIT:"CPU"}'
+                  opdata: 'Valor atual: {ITEM.LASTVALUE1}'
                   priority: HIGH
-                  description: 'Este gatilho (trigger) usa os valores do sensor de temperatura, bem como o status do sensor de temperatura, se disponível'
+                  description: 'Este gatilho usa os valores do sensor de temperatura, bem como o status do sensor de temperatura, se disponível'
                   tags:
                     -
                       tag: scope
@@ -643,20 +590,20 @@ zabbix_export:
                       tag: scope
                       value: performance
                 -
-                  uuid: 0c240046f1434ffb8c2cba26e4b0e61d
-                  expression: 'avg(/OKTelecomPB-CCR1036-8G-2S/sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}],5m)>{$TEMP_WARN:"CPU"}'
+                  uuid: 876a62a4aa6a449d888f1233c24c0dbc
+                  expression: 'avg(/MikroTik CCR1036-8G-2SPlus - Full/sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}],5m)>{$TEMP_WARN:"CPU"}'
                   recovery_mode: RECOVERY_EXPRESSION
-                  recovery_expression: 'max(/OKTelecomPB-CCR1036-8G-2S/sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}],5m)<{$TEMP_WARN:"CPU"}-3'
-                  name: 'CPU: Temperatura está acima do limite de aviso'
-                  event_name: 'CPU: Temperatura está acima do limite de aviso: >{$TEMP_WARN:"CPU"}'
-                  opdata: 'Current value: {ITEM.LASTVALUE1}'
+                  recovery_expression: 'max(/MikroTik CCR1036-8G-2SPlus - Full/sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}],5m)<{$TEMP_WARN:"CPU"}-3'
+                  name: 'CPU: Temperatura acima do limite de aviso'
+                  event_name: 'CPU: Temperatura acima do limite de aviso: >{$TEMP_WARN:"CPU"}'
+                  opdata: 'Valor atual: {ITEM.LASTVALUE1}'
                   priority: WARNING
-                  description: 'Este gatilho (trigger) usa os valores do sensor de temperatura, bem como o status do sensor de temperatura, se disponível'
+                  description: 'Este gatilho usa os valores do sensor de temperatura, bem como o status do sensor de temperatura, se disponível'
                   dependencies:
                     -
-                      name: 'CPU: Temperatura está acima do limite crítico'
-                      expression: 'avg(/OKTelecomPB-CCR1036-8G-2S/sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}],5m)>{$TEMP_CRIT:"CPU"}'
-                      recovery_expression: 'max(/OKTelecomPB-CCR1036-8G-2S/sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}],5m)<{$TEMP_CRIT:"CPU"}-3'
+                      name: 'CPU: Temperatura acima do limite crítico'
+                      expression: 'avg(/MikroTik CCR1036-8G-2SPlus - Full/sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}],5m)>{$TEMP_CRIT:"CPU"}'
+                      recovery_expression: 'max(/MikroTik CCR1036-8G-2SPlus - Full/sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}],5m)<{$TEMP_CRIT:"CPU"}-3'
                   tags:
                     -
                       tag: scope
@@ -665,13 +612,13 @@ zabbix_export:
                       tag: scope
                       value: performance
                 -
-                  uuid: f810f58531c54e3bbcf6d0e677100237
-                  expression: 'avg(/OKTelecomPB-CCR1036-8G-2S/sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}],5m)<{$TEMP_CRIT_LOW:"CPU"}'
+                  uuid: 79304fcbafe349d4adeebe277858d23a
+                  expression: 'avg(/MikroTik CCR1036-8G-2SPlus - Full/sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}],5m)<{$TEMP_CRIT_LOW:"CPU"}'
                   recovery_mode: RECOVERY_EXPRESSION
-                  recovery_expression: 'min(/OKTelecomPB-CCR1036-8G-2S/sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}],5m)>{$TEMP_CRIT_LOW:"CPU"}+3'
-                  name: 'CPU: Temperatura está muito baixa'
-                  event_name: 'CPU: Temperatura está muito baixa: <{$TEMP_CRIT_LOW:"CPU"}'
-                  opdata: 'Current value: {ITEM.LASTVALUE1}'
+                  recovery_expression: 'min(/MikroTik CCR1036-8G-2SPlus - Full/sensor.temp.value[mtxrHlProcessorTemperature.{#SNMPINDEX}],5m)>{$TEMP_CRIT_LOW:"CPU"}+3'
+                  name: 'CPU: Temperatura muito baixa'
+                  event_name: 'CPU: Temperatura muito baixa: <{$TEMP_CRIT_LOW:"CPU"}'
+                  opdata: 'Valor atual: {ITEM.LASTVALUE1}'
                   priority: AVERAGE
                   tags:
                     -
@@ -681,28 +628,24 @@ zabbix_export:
                       tag: scope
                       value: performance
         -
-          uuid: db9785c59e4b4b1e922fd5a6ded18ae6
-          name: 'Descoberta de Temperatura Sensor'
+          uuid: a5a949d4fee442ffa2feb45f703396dd
+          name: '03 - Temperatura Interna'
           type: SNMP_AGENT
           snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.14988.1.1.3.10]'
           key: mtxrHlTemperature.discovery
           delay: 1h
-          description: |
-            MIKROTIK-MIB::mtxrHlTemperature
-            Como o sensor de temperatura não está disponível em todos os hardwares do Mikrotik, isso é feito para evitar itens não suportados.
           item_prototypes:
             -
-              uuid: 1798378de4a34ef39db1c9b22a1131e8
-              name: 'Dispositivo: Temperatura'
+              uuid: efe26a08e5244aba9529e2a19512b022
+              name: 'Temperatura Interna:'
               type: SNMP_AGENT
               snmp_oid: '1.3.6.1.4.1.14988.1.1.3.10.{#SNMPINDEX}'
               key: 'sensor.temp.value[mtxrHlTemperature.{#SNMPINDEX}]'
               delay: 3m
+              history: 7d
+              trends: 90d
               value_type: FLOAT
               units: °C
-              description: |
-                MIB: MIKROTIK-MIB
-                mtxrHlTemperature Dispositivo temperatura em Graus Celsius (ºC).
               preprocessing:
                 -
                   type: MULTIPLIER
@@ -710,19 +653,19 @@ zabbix_export:
                     - '0.1'
               tags:
                 -
-                  tag: component
-                  value: temperature
+                  tag: Informações
+                  value: Dispositivo
               trigger_prototypes:
                 -
-                  uuid: 773c5f9316c44d8297b4fd3cdd236da1
-                  expression: 'avg(/OKTelecomPB-CCR1036-8G-2S/sensor.temp.value[mtxrHlTemperature.{#SNMPINDEX}],5m)>{$TEMP_CRIT:"Device"}'
+                  uuid: 80af013716d944e8be4cef996aabfef2
+                  expression: 'avg(/MikroTik CCR1036-8G-2SPlus - Full/sensor.temp.value[mtxrHlTemperature.{#SNMPINDEX}],5m)>{$TEMP_CRIT:"Device"}'
                   recovery_mode: RECOVERY_EXPRESSION
-                  recovery_expression: 'max(/OKTelecomPB-CCR1036-8G-2S/sensor.temp.value[mtxrHlTemperature.{#SNMPINDEX}],5m)<{$TEMP_CRIT:"Device"}-3'
-                  name: 'Dispositivo: Temperatura está acima do limite crítico'
-                  event_name: 'Dispositivo: Temperatura está acima do limite crítico: >{$TEMP_CRIT:"Device"}'
-                  opdata: 'Current value: {ITEM.LASTVALUE1}'
+                  recovery_expression: 'max(/MikroTik CCR1036-8G-2SPlus - Full/sensor.temp.value[mtxrHlTemperature.{#SNMPINDEX}],5m)<{$TEMP_CRIT:"Device"}-3'
+                  name: 'Dispositivo: Temperatura acima do limite crítico'
+                  event_name: 'Dispositivo: Temperatura acima do limite crítico: >{$TEMP_CRIT:"Device"}'
+                  opdata: 'Valor atual: {ITEM.LASTVALUE1}'
                   priority: HIGH
-                  description: 'Este gatilho (trigger) usa os valores do sensor de temperatura, bem como o status do sensor de temperatura, se disponível'
+                  description: 'Este gatilho usa os valores do sensor de temperatura, bem como o status do sensor de temperatura, se disponível'
                   tags:
                     -
                       tag: scope
@@ -731,20 +674,20 @@ zabbix_export:
                       tag: scope
                       value: performance
                 -
-                  uuid: 3d688fda4da843e192c26d955d8d8dd9
-                  expression: 'avg(/OKTelecomPB-CCR1036-8G-2S/sensor.temp.value[mtxrHlTemperature.{#SNMPINDEX}],5m)>{$TEMP_WARN:"Device"}'
+                  uuid: ab46cd19e709417ebeb5c3b9964e2eee
+                  expression: 'avg(/MikroTik CCR1036-8G-2SPlus - Full/sensor.temp.value[mtxrHlTemperature.{#SNMPINDEX}],5m)>{$TEMP_WARN:"Device"}'
                   recovery_mode: RECOVERY_EXPRESSION
-                  recovery_expression: 'max(/OKTelecomPB-CCR1036-8G-2S/sensor.temp.value[mtxrHlTemperature.{#SNMPINDEX}],5m)<{$TEMP_WARN:"Device"}-3'
-                  name: 'Dispositivo: Temperatura está acima do limite de aviso'
-                  event_name: 'Dispositivo: Temperatura está acima do limite de aviso: >{$TEMP_WARN:"Device"}'
-                  opdata: 'Current value: {ITEM.LASTVALUE1}'
+                  recovery_expression: 'max(/MikroTik CCR1036-8G-2SPlus - Full/sensor.temp.value[mtxrHlTemperature.{#SNMPINDEX}],5m)<{$TEMP_WARN:"Device"}-3'
+                  name: 'Device: Temperature is above warning threshold'
+                  event_name: 'Device: Temperature is above warning threshold: >{$TEMP_WARN:"Device"}'
+                  opdata: 'Valor atual: {ITEM.LASTVALUE1}'
                   priority: WARNING
-                  description: 'Este gatilho (trigger) usa os valores do sensor de temperatura, bem como o status do sensor de temperatura, se disponível'
+                  description: 'Este gatilho usa os valores do sensor de temperatura, bem como o status do sensor de temperatura, se disponível'
                   dependencies:
                     -
-                      name: 'Dispositivo: Temperatura está acima do limite crítico'
-                      expression: 'avg(/OKTelecomPB-CCR1036-8G-2S/sensor.temp.value[mtxrHlTemperature.{#SNMPINDEX}],5m)>{$TEMP_CRIT:"Device"}'
-                      recovery_expression: 'max(/OKTelecomPB-CCR1036-8G-2S/sensor.temp.value[mtxrHlTemperature.{#SNMPINDEX}],5m)<{$TEMP_CRIT:"Device"}-3'
+                      name: 'Dispositivo: Temperatura acima do limite crítico'
+                      expression: 'avg(/MikroTik CCR1036-8G-2SPlus - Full/sensor.temp.value[mtxrHlTemperature.{#SNMPINDEX}],5m)>{$TEMP_CRIT:"Device"}'
+                      recovery_expression: 'max(/MikroTik CCR1036-8G-2SPlus - Full/sensor.temp.value[mtxrHlTemperature.{#SNMPINDEX}],5m)<{$TEMP_CRIT:"Device"}-3'
                   tags:
                     -
                       tag: scope
@@ -753,13 +696,13 @@ zabbix_export:
                       tag: scope
                       value: performance
                 -
-                  uuid: 2a21380034244b29878bbb198cca6712
-                  expression: 'avg(/OKTelecomPB-CCR1036-8G-2S/sensor.temp.value[mtxrHlTemperature.{#SNMPINDEX}],5m)<{$TEMP_CRIT_LOW:"Device"}'
+                  uuid: 06e95d596af74a288b3787cb665255bb
+                  expression: 'avg(/MikroTik CCR1036-8G-2SPlus - Full/sensor.temp.value[mtxrHlTemperature.{#SNMPINDEX}],5m)<{$TEMP_CRIT_LOW:"Device"}'
                   recovery_mode: RECOVERY_EXPRESSION
-                  recovery_expression: 'min(/OKTelecomPB-CCR1036-8G-2S/sensor.temp.value[mtxrHlTemperature.{#SNMPINDEX}],5m)>{$TEMP_CRIT_LOW:"Device"}+3'
-                  name: 'Dispositivo: Temperatura está muito baixa'
-                  event_name: 'Dispositivo: Temperatura está muito baixa: <{$TEMP_CRIT_LOW:"Device"}'
-                  opdata: 'Current value: {ITEM.LASTVALUE1}'
+                  recovery_expression: 'min(/MikroTik CCR1036-8G-2SPlus - Full/sensor.temp.value[mtxrHlTemperature.{#SNMPINDEX}],5m)>{$TEMP_CRIT_LOW:"Device"}+3'
+                  name: 'Device: Temperature is too low'
+                  event_name: 'Device: Temperature is too low: <{$TEMP_CRIT_LOW:"Device"}'
+                  opdata: 'Valor atual: {ITEM.LASTVALUE1}'
                   priority: AVERAGE
                   tags:
                     -
@@ -769,8 +712,8 @@ zabbix_export:
                       tag: scope
                       value: performance
         -
-          uuid: 943ddeb0de9f457cac2a0f4eccc7a3d3
-          name: 'Descoberta de Interfaces de Rede'
+          uuid: f684ba95e12942a28e9c152670ea1a4c
+          name: '05 - Interfaces'
           type: SNMP_AGENT
           snmp_oid: 'discovery[{#IFOPERSTATUS},1.3.6.1.2.1.2.2.1.8,{#IFADMINSTATUS},1.3.6.1.2.1.2.2.1.7,{#IFALIAS},1.3.6.1.2.1.31.1.1.1.18,{#IFNAME},1.3.6.1.2.1.31.1.1.1.1,{#IFDESCR},1.3.6.1.2.1.2.2.1.2,{#IFTYPE},1.3.6.1.2.1.2.2.1.3]'
           key: net.if.discovery
@@ -825,26 +768,19 @@ zabbix_export:
                 formulaid: D
               -
                 macro: '{#IFTYPE}'
-                value: '{$NET.IF.IFTYPE.MATCHES}'
+                value: (6|161|135)
                 formulaid: K
-              -
-                macro: '{#IFTYPE}'
-                value: '{$NET.IF.IFTYPE.NOT_MATCHES}'
-                operator: NOT_MATCHES_REGEX
-                formulaid: L
-          description: 'Descobrindo interfaces de IF-MIB.'
+          description: 'Discovering interfaces from IF-MIB.'
           item_prototypes:
             -
-              uuid: f499f2a08c364fe6b7ba7c2edbeaa25a
-              name: 'Interface {#IFNAME}({#IFALIAS}): Inbound packets discarded'
+              uuid: 00901669a3b34b90bbc7df4fb135b998
+              name: 'Interface {#IFNAME} - Descartados RX:'
               type: SNMP_AGENT
               snmp_oid: '1.3.6.1.2.1.2.2.1.13.{#SNMPINDEX}'
               key: 'net.if.in.discards[ifInDiscards.{#SNMPINDEX}]'
               delay: 3m
               history: 7d
-              description: |
-                MIB: IF-MIB
-                O número de pacotes de entrada que foram escolhidos para serem descartados, mesmo que nenhum erro tenha sido detectado para evitar que sejam entregues a um protocolo de camada superior. Uma possível razão para descartar tal pacote poderia ser liberar espaço no buffer. Descontinuidades no valor desse contador podem ocorrer na reinicialização do sistema de gerenciamento e em outros momentos, conforme indicado pelo valor de ifCounterDiscontinuityTime.
+              trends: 90d
               preprocessing:
                 -
                   type: CHANGE_PER_SECOND
@@ -852,25 +788,17 @@ zabbix_export:
                     - ''
               tags:
                 -
-                  tag: component
-                  value: network
-                -
-                  tag: description
-                  value: '{#IFALIAS}'
-                -
-                  tag: interface
-                  value: '{#IFNAME}'
+                  tag: Informações
+                  value: Interfaces
             -
-              uuid: 1468bc68752741b2b58f1d26ec4957d5
-              name: 'Interface {#IFNAME}({#IFALIAS}): Inbound packets with errors'
+              uuid: 08d326dcf526411c948211b415f67992
+              name: 'Interface {#IFNAME} - Erros RX:'
               type: SNMP_AGENT
               snmp_oid: '1.3.6.1.2.1.2.2.1.14.{#SNMPINDEX}'
               key: 'net.if.in.errors[ifInErrors.{#SNMPINDEX}]'
               delay: 3m
               history: 7d
-              description: |
-                MIB: IF-MIB
-                Para interfaces orientadas a pacotes, o número de pacotes de entrada que continham erros que os impediam de serem entregues a um protocolo de camada superior. Para interfaces orientadas a caracteres ou de comprimento fixo, o número de unidades de transmissão de entrada que continham erros que as impediam de serem entregues a um protocolo de camada superior. Descontinuidades no valor deste contador podem ocorrer na reinicialização do sistema de gerenciamento e em outros momentos conforme indicado pelo valor de ifCounterDiscontinuityTime.
+              trends: 90d
               preprocessing:
                 -
                   type: CHANGE_PER_SECOND
@@ -878,26 +806,18 @@ zabbix_export:
                     - ''
               tags:
                 -
-                  tag: component
-                  value: network
-                -
-                  tag: description
-                  value: '{#IFALIAS}'
-                -
-                  tag: interface
-                  value: '{#IFNAME}'
+                  tag: Informações
+                  value: Interfaces
             -
-              uuid: 4fdb243ad3714135bb1a04ca12ec42ef
-              name: 'Interface {#IFNAME}({#IFALIAS}): Bits received'
+              uuid: f5ec52a22acb4156aae1d804bbae2668
+              name: 'Interface {#IFNAME} - Bits RX:'
               type: SNMP_AGENT
               snmp_oid: '1.3.6.1.2.1.31.1.1.1.6.{#SNMPINDEX}'
               key: 'net.if.in[ifHCInOctets.{#SNMPINDEX}]'
               delay: 3m
               history: 7d
+              trends: 90d
               units: bps
-              description: |
-                MIB: IF-MIB
-                O número total de octetos recebidos na interface, incluindo caracteres de enquadramento. Este objeto é uma versão de 64 bits de ifInOctets. Descontinuidades no valor deste contador podem ocorrer na reinicialização do sistema de gerenciamento e em outros momentos conforme indicado pelo valor deifCounterDiscontinuityTime.
               preprocessing:
                 -
                   type: CHANGE_PER_SECOND
@@ -909,29 +829,17 @@ zabbix_export:
                     - '8'
               tags:
                 -
-                  tag: component
-                  value: network
-                -
-                  tag: description
-                  value: '{#IFALIAS}'
-                -
-                  tag: interface
-                  value: '{#IFNAME}'
+                  tag: Informações
+                  value: Interfaces
             -
-              uuid: d5e1c2875beb42d9a1b5b876ee4e1d7b
-              name: 'Interface {#IFNAME}({#IFALIAS}): Outbound packets discarded'
+              uuid: af396e21711f419ba854d78ea6dc5244
+              name: 'Interface {#IFNAME} - Descartados TX:'
               type: SNMP_AGENT
               snmp_oid: '1.3.6.1.2.1.2.2.1.19.{#SNMPINDEX}'
               key: 'net.if.out.discards[ifOutDiscards.{#SNMPINDEX}]'
               delay: 3m
               history: 7d
-              description: |
-                MIB: IF-MIB
-                The number of outbound packets which were chosen to be discarded
-                even though no errors had been detected to prevent their being deliverable to a higher-layer protocol.
-                One possible reason for discarding such a packet could be to free up buffer space.
-                Discontinuities in the value of this counter can occur at re-initialization of the management system,
-                and at other times as indicated by the value of ifCounterDiscontinuityTime.
+              trends: 90d
               preprocessing:
                 -
                   type: CHANGE_PER_SECOND
@@ -939,25 +847,17 @@ zabbix_export:
                     - ''
               tags:
                 -
-                  tag: component
-                  value: network
-                -
-                  tag: description
-                  value: '{#IFALIAS}'
-                -
-                  tag: interface
-                  value: '{#IFNAME}'
+                  tag: Informações
+                  value: Interfaces
             -
-              uuid: 23e1145639f54a509fc4b629af9bfe9a
-              name: 'Interface {#IFNAME}({#IFALIAS}): Outbound packets with errors'
+              uuid: 1a961ca305f748a99e807efeacbef3be
+              name: 'Interface {#IFNAME} - Erros TX:'
               type: SNMP_AGENT
               snmp_oid: '1.3.6.1.2.1.2.2.1.20.{#SNMPINDEX}'
               key: 'net.if.out.errors[ifOutErrors.{#SNMPINDEX}]'
               delay: 3m
               history: 7d
-              description: |
-                MIB: IF-MIB
-                Para interfaces orientadas a pacotes, o número de pacotes de saída que continham erros que os impediam de serem entregues a um protocolo de camada superior. Para interfaces orientadas a caracteres ou de comprimento fixo, o número de unidades de transmissão de saída que continham erros que as impediam de serem entregues a um protocolo de camada superior. Descontinuidades no valor deste contador podem ocorrer na reinicialização do sistema de gerenciamento e em outros momentos conforme indicado pelo valor de ifCounterDiscontinuityTime.
+              trends: 90d
               preprocessing:
                 -
                   type: CHANGE_PER_SECOND
@@ -965,26 +865,18 @@ zabbix_export:
                     - ''
               tags:
                 -
-                  tag: component
-                  value: network
-                -
-                  tag: description
-                  value: '{#IFALIAS}'
-                -
-                  tag: interface
-                  value: '{#IFNAME}'
+                  tag: Informações
+                  value: Interfaces
             -
-              uuid: c41739be871e4044b8218ff1cc289ea4
-              name: 'Interface {#IFNAME}({#IFALIAS}): Bits sent'
+              uuid: 9a9671c5bc574aff993c898453496781
+              name: 'Interface {#IFNAME} - Bits TX:'
               type: SNMP_AGENT
               snmp_oid: '1.3.6.1.2.1.31.1.1.1.10.{#SNMPINDEX}'
               key: 'net.if.out[ifHCOutOctets.{#SNMPINDEX}]'
               delay: 3m
               history: 7d
+              trends: 90d
               units: bps
-              description: |
-                MIB: IF-MIB
-                O número total de octetos transmitidos pela interface, incluindo caracteres de enquadramento. Este objeto é uma versão de 64 bits de ifOutOctets. Descontinuidades no valor deste contador podem ocorrer na reinicialização do sistema de gerenciamento e em outros momentos conforme indicado pelo valor de ifCounterDiscontinuityTime.
               preprocessing:
                 -
                   type: CHANGE_PER_SECOND
@@ -996,27 +888,18 @@ zabbix_export:
                     - '8'
               tags:
                 -
-                  tag: component
-                  value: network
-                -
-                  tag: description
-                  value: '{#IFALIAS}'
-                -
-                  tag: interface
-                  value: '{#IFNAME}'
+                  tag: Informações
+                  value: Interfaces
             -
-              uuid: f9db52be572643c3ac04ef113aa84262
-              name: 'Interface {#IFNAME}({#IFALIAS}): Speed'
+              uuid: d313a2ecd18d4230bd5b0e77c230be85
+              name: 'Interface {#IFNAME} - Velocidade:'
               type: SNMP_AGENT
               snmp_oid: '1.3.6.1.2.1.31.1.1.1.15.{#SNMPINDEX}'
               key: 'net.if.speed[ifHighSpeed.{#SNMPINDEX}]'
               delay: 5m
               history: 7d
-              trends: 0d
+              trends: 90d
               units: bps
-              description: |
-                MIB: IF-MIB
-                Uma estimativa da largura de banda atual da interface em unidades de 1,000,000 de bits por segundo. Se este objeto relatar um valor de `n' então a velocidade da interface está em algum lugar na faixa de `n-500,000' para `n+499,999'.  Para interfaces que não variam em largura de banda ou para aquelas onde nenhuma estimativa precisa pode ser feita, este objeto deve conter a largura de banda nominal. Para uma subcamada que não tem conceito de largura de banda, este objeto deve ser zero.
               preprocessing:
                 -
                   type: MULTIPLIER
@@ -1028,57 +911,36 @@ zabbix_export:
                     - 1h
               tags:
                 -
-                  tag: component
-                  value: network
-                -
-                  tag: description
-                  value: '{#IFALIAS}'
-                -
-                  tag: interface
-                  value: '{#IFNAME}'
+                  tag: Informações
+                  value: Interfaces
             -
-              uuid: 0f8614d6d02840e1868ffd4540048daf
-              name: 'Interface {#IFNAME}({#IFALIAS}): Status Operacional'
+              uuid: f24cb71bbf454cd492149aae3ce492b9
+              name: 'Interface {#IFNAME} - Status:'
               type: SNMP_AGENT
               snmp_oid: '1.3.6.1.2.1.2.2.1.8.{#SNMPINDEX}'
               key: 'net.if.status[ifOperStatus.{#SNMPINDEX}]'
               history: 7d
-              trends: '0'
-              description: |
-                MIB: IF-MIB
-                O Status Operacional atual da interface.
-                - O Status Testando(3) indica que nenhuma verificação de pacote operacional foi aprovada
-                - Se ifAdminStatus for Inativo(2) então ifOperStatus será Inativo(2)
-                - Se ifAdminStatus for alterado para Ativado(1), ifOperStatus deve ser alterado para Ativado(1) e a interface estará pronta para transmitir e receber tráfego de rede
-                - Ele deve mudar Parado(5) se a interface estiver Ociosa esperando por ações externas (como uma linha serial esperando por uma conexão de entrada)
-                - Ele deve permanecer no estado Inativo(2) se houver uma falha que o impeça de ir para o estado Ativado(1)
-                - Ele deve permanecer no estado Não-Presente(6) se a interface tiver componentes ausentes (normalmente, hardware).
+              trends: 90d
               valuemap:
                 name: 'IF-MIB::ifOperStatus'
               tags:
                 -
-                  tag: component
-                  value: network
-                -
-                  tag: description
-                  value: '{#IFALIAS}'
-                -
-                  tag: interface
-                  value: '{#IFNAME}'
+                  tag: Informações
+                  value: Interfaces
               trigger_prototypes:
                 -
-                  uuid: 1f7c8669552d4890ac963f53aefcf100
-                  expression: '{$IFCONTROL:"{#IFNAME}"}=1 and last(/OKTelecomPB-CCR1036-8G-2S/net.if.status[ifOperStatus.{#SNMPINDEX}])=2 and (last(/OKTelecomPB-CCR1036-8G-2S/net.if.status[ifOperStatus.{#SNMPINDEX}],#1)<>last(/OKTelecomPB-CCR1036-8G-2S/net.if.status[ifOperStatus.{#SNMPINDEX}],#2))'
+                  uuid: 80d625abfee747ffa6513c604aff983f
+                  expression: '{$IFCONTROL:"{#IFNAME}"}=1 and last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.status[ifOperStatus.{#SNMPINDEX}])=2 and (last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.status[ifOperStatus.{#SNMPINDEX}],#1)<>last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.status[ifOperStatus.{#SNMPINDEX}],#2))'
                   recovery_mode: RECOVERY_EXPRESSION
-                  recovery_expression: 'last(/OKTelecomPB-CCR1036-8G-2S/net.if.status[ifOperStatus.{#SNMPINDEX}])<>2 or {$IFCONTROL:"{#IFNAME}"}=0'
-                  name: 'Interface {#IFNAME}({#IFALIAS}): Link Inativo'
+                  recovery_expression: 'last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.status[ifOperStatus.{#SNMPINDEX}])<>2 or {$IFCONTROL:"{#IFNAME}"}=0'
+                  name: 'Interface {#IFNAME}({#IFALIAS}): Link down'
                   opdata: 'Current state: {ITEM.LASTVALUE1}'
                   priority: AVERAGE
                   description: |
-                    Essa expressão de Gatilho (Trigger) funciona da seguinte maneira:
-                    1. Pode ser acionado se o status das operações estiver inativo.
-                    2. {$IFCONTROL:"{#IFNAME}"}=1 - o usuário pode redefinir macro de contexto para valor - 0. Isso marca essa interface como não importante. Nenhum novo gatilho será acionado se esta interface estiver inativa.
-                    3. {TEMPLATE_NAME:METRIC.diff()}=1) - gatilho (trigger) dispara somente se o Status Operacional foi Ativado(1) algum tempo antes. (Portanto, não dispare se interfaces 'ethernal off'.)
+                    This trigger expression works as follows:
+                    1. Can be triggered if operations status is down.
+                    2. {$IFCONTROL:"{#IFNAME}"}=1 - user can redefine Context macro to value - 0. That marks this interface as not important. No new trigger will be fired if this interface is down.
+                    3. {TEMPLATE_NAME:METRIC.diff()}=1) - trigger fires only if operational status was up(1) sometime before. (So, do not fire 'ethernal off' interfaces.)
                     
                     WARNING: if closed manually - won't fire again on next poll, because of .diff.
                   manual_close: 'YES'
@@ -1087,19 +949,14 @@ zabbix_export:
                       tag: scope
                       value: availability
             -
-              uuid: 934e91a1cbee404fb99411147351230b
-              name: 'Interface {#IFNAME}({#IFALIAS}): Interface type'
+              uuid: b41c85b4504a4a5e9ef546096ac45c11
+              name: 'Interface {#IFNAME} - Tipo:'
               type: SNMP_AGENT
               snmp_oid: '1.3.6.1.2.1.2.2.1.3.{#SNMPINDEX}'
               key: 'net.if.type[ifType.{#SNMPINDEX}]'
               delay: 1h
               history: 7d
-              trends: 0d
-              description: |
-                MIB: IF-MIB
-                The type of interface.
-                Additional values for ifType are assigned by the Internet Assigned Numbers Authority (IANA),
-                through updating the syntax of the IANAifType textual convention.
+              trends: 90d
               valuemap:
                 name: 'IF-MIB::ifType'
               preprocessing:
@@ -1109,92 +966,86 @@ zabbix_export:
                     - 1d
               tags:
                 -
-                  tag: component
-                  value: network
-                -
-                  tag: description
-                  value: '{#IFALIAS}'
-                -
-                  tag: interface
-                  value: '{#IFNAME}'
+                  tag: Informações
+                  value: Interfaces
           trigger_prototypes:
             -
-              uuid: e9c85085a0d546ba910b139c99adee10
+              uuid: 1d4bee528df346c6b9ac8e73352b0871
               expression: |
-                change(/OKTelecomPB-CCR1036-8G-2S/net.if.speed[ifHighSpeed.{#SNMPINDEX}])<0 and last(/OKTelecomPB-CCR1036-8G-2S/net.if.speed[ifHighSpeed.{#SNMPINDEX}])>0
+                change(/MikroTik CCR1036-8G-2SPlus - Full/net.if.speed[ifHighSpeed.{#SNMPINDEX}])<0 and last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.speed[ifHighSpeed.{#SNMPINDEX}])>0
                 and (
-                last(/OKTelecomPB-CCR1036-8G-2S/net.if.type[ifType.{#SNMPINDEX}])=6 or
-                last(/OKTelecomPB-CCR1036-8G-2S/net.if.type[ifType.{#SNMPINDEX}])=7 or
-                last(/OKTelecomPB-CCR1036-8G-2S/net.if.type[ifType.{#SNMPINDEX}])=11 or
-                last(/OKTelecomPB-CCR1036-8G-2S/net.if.type[ifType.{#SNMPINDEX}])=62 or
-                last(/OKTelecomPB-CCR1036-8G-2S/net.if.type[ifType.{#SNMPINDEX}])=69 or
-                last(/OKTelecomPB-CCR1036-8G-2S/net.if.type[ifType.{#SNMPINDEX}])=117
+                last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.type[ifType.{#SNMPINDEX}])=6 or
+                last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.type[ifType.{#SNMPINDEX}])=7 or
+                last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.type[ifType.{#SNMPINDEX}])=11 or
+                last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.type[ifType.{#SNMPINDEX}])=62 or
+                last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.type[ifType.{#SNMPINDEX}])=69 or
+                last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.type[ifType.{#SNMPINDEX}])=117
                 )
                 and
-                (last(/OKTelecomPB-CCR1036-8G-2S/net.if.status[ifOperStatus.{#SNMPINDEX}])<>2)
+                (last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.status[ifOperStatus.{#SNMPINDEX}])<>2)
               recovery_mode: RECOVERY_EXPRESSION
               recovery_expression: |
-                (change(/OKTelecomPB-CCR1036-8G-2S/net.if.speed[ifHighSpeed.{#SNMPINDEX}])>0 and last(/OKTelecomPB-CCR1036-8G-2S/net.if.speed[ifHighSpeed.{#SNMPINDEX}],#2)>0) or
-                (last(/OKTelecomPB-CCR1036-8G-2S/net.if.status[ifOperStatus.{#SNMPINDEX}])=2)
-              name: 'Interface {#IFNAME}({#IFALIAS}): Ethernet Baixou a Velocidade'
+                (change(/MikroTik CCR1036-8G-2SPlus - Full/net.if.speed[ifHighSpeed.{#SNMPINDEX}])>0 and last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.speed[ifHighSpeed.{#SNMPINDEX}],#2)>0) or
+                (last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.status[ifOperStatus.{#SNMPINDEX}])=2)
+              name: 'Interface {#IFNAME}({#IFALIAS}): Ethernet has changed to lower speed than it was before'
               opdata: 'Current reported speed: {ITEM.LASTVALUE1}'
               priority: INFO
-              description: 'Esta conexão Ethernet foi reduzida de sua velocidade máxima conhecida. Isso pode ser um sinal de problemas de negociação automática.'
+              description: 'This Ethernet connection has transitioned down from its known maximum speed. This might be a sign of autonegotiation issues. Ack to close.'
               manual_close: 'YES'
               dependencies:
                 -
-                  name: 'Interface {#IFNAME}({#IFALIAS}): Link Inativo'
-                  expression: '{$IFCONTROL:"{#IFNAME}"}=1 and last(/OKTelecomPB-CCR1036-8G-2S/net.if.status[ifOperStatus.{#SNMPINDEX}])=2 and (last(/OKTelecomPB-CCR1036-8G-2S/net.if.status[ifOperStatus.{#SNMPINDEX}],#1)<>last(/OKTelecomPB-CCR1036-8G-2S/net.if.status[ifOperStatus.{#SNMPINDEX}],#2))'
-                  recovery_expression: 'last(/OKTelecomPB-CCR1036-8G-2S/net.if.status[ifOperStatus.{#SNMPINDEX}])<>2 or {$IFCONTROL:"{#IFNAME}"}=0'
+                  name: 'Interface {#IFNAME}({#IFALIAS}): Link down'
+                  expression: '{$IFCONTROL:"{#IFNAME}"}=1 and last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.status[ifOperStatus.{#SNMPINDEX}])=2 and (last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.status[ifOperStatus.{#SNMPINDEX}],#1)<>last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.status[ifOperStatus.{#SNMPINDEX}],#2))'
+                  recovery_expression: 'last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.status[ifOperStatus.{#SNMPINDEX}])<>2 or {$IFCONTROL:"{#IFNAME}"}=0'
               tags:
                 -
                   tag: scope
                   value: performance
             -
-              uuid: 91c48f7aac824bfbb58d78bd791a60e2
+              uuid: 17ab3a7deafe4ffdbc33a1d3ebef3039
               expression: |
-                (avg(/OKTelecomPB-CCR1036-8G-2S/net.if.in[ifHCInOctets.{#SNMPINDEX}],15m)>({$IF.UTIL.MAX:"{#IFNAME}"}/100)*last(/OKTelecomPB-CCR1036-8G-2S/net.if.speed[ifHighSpeed.{#SNMPINDEX}]) or
-                avg(/OKTelecomPB-CCR1036-8G-2S/net.if.out[ifHCOutOctets.{#SNMPINDEX}],15m)>({$IF.UTIL.MAX:"{#IFNAME}"}/100)*last(/OKTelecomPB-CCR1036-8G-2S/net.if.speed[ifHighSpeed.{#SNMPINDEX}])) and
-                last(/OKTelecomPB-CCR1036-8G-2S/net.if.speed[ifHighSpeed.{#SNMPINDEX}])>0
+                (avg(/MikroTik CCR1036-8G-2SPlus - Full/net.if.in[ifHCInOctets.{#SNMPINDEX}],15m)>({$IF.UTIL.MAX:"{#IFNAME}"}/100)*last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.speed[ifHighSpeed.{#SNMPINDEX}]) or
+                avg(/MikroTik CCR1036-8G-2SPlus - Full/net.if.out[ifHCOutOctets.{#SNMPINDEX}],15m)>({$IF.UTIL.MAX:"{#IFNAME}"}/100)*last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.speed[ifHighSpeed.{#SNMPINDEX}])) and
+                last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.speed[ifHighSpeed.{#SNMPINDEX}])>0
               recovery_mode: RECOVERY_EXPRESSION
               recovery_expression: |
-                avg(/OKTelecomPB-CCR1036-8G-2S/net.if.in[ifHCInOctets.{#SNMPINDEX}],15m)<(({$IF.UTIL.MAX:"{#IFNAME}"}-3)/100)*last(/OKTelecomPB-CCR1036-8G-2S/net.if.speed[ifHighSpeed.{#SNMPINDEX}]) and
-                avg(/OKTelecomPB-CCR1036-8G-2S/net.if.out[ifHCOutOctets.{#SNMPINDEX}],15m)<(({$IF.UTIL.MAX:"{#IFNAME}"}-3)/100)*last(/OKTelecomPB-CCR1036-8G-2S/net.if.speed[ifHighSpeed.{#SNMPINDEX}])
+                avg(/MikroTik CCR1036-8G-2SPlus - Full/net.if.in[ifHCInOctets.{#SNMPINDEX}],15m)<(({$IF.UTIL.MAX:"{#IFNAME}"}-3)/100)*last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.speed[ifHighSpeed.{#SNMPINDEX}]) and
+                avg(/MikroTik CCR1036-8G-2SPlus - Full/net.if.out[ifHCOutOctets.{#SNMPINDEX}],15m)<(({$IF.UTIL.MAX:"{#IFNAME}"}-3)/100)*last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.speed[ifHighSpeed.{#SNMPINDEX}])
               name: 'Interface {#IFNAME}({#IFALIAS}): High bandwidth usage'
-              event_name: 'Interface {#IFNAME}({#IFALIAS}): Alto uso de Banda(>{$IF.UTIL.MAX:"{#IFNAME}"}%)'
+              event_name: 'Interface {#IFNAME}({#IFALIAS}): High bandwidth usage (>{$IF.UTIL.MAX:"{#IFNAME}"}%)'
               opdata: 'In: {ITEM.LASTVALUE1}, out: {ITEM.LASTVALUE3}, speed: {ITEM.LASTVALUE2}'
               priority: WARNING
-              description: 'A utilização da interface de rede está próxima de sua largura de banda máxima estimada.'
+              description: 'The network interface utilization is close to its estimated maximum bandwidth.'
               manual_close: 'YES'
               dependencies:
                 -
-                  name: 'Interface {#IFNAME}({#IFALIAS}): Link Inativo'
-                  expression: '{$IFCONTROL:"{#IFNAME}"}=1 and last(/OKTelecomPB-CCR1036-8G-2S/net.if.status[ifOperStatus.{#SNMPINDEX}])=2 and (last(/OKTelecomPB-CCR1036-8G-2S/net.if.status[ifOperStatus.{#SNMPINDEX}],#1)<>last(/OKTelecomPB-CCR1036-8G-2S/net.if.status[ifOperStatus.{#SNMPINDEX}],#2))'
-                  recovery_expression: 'last(/OKTelecomPB-CCR1036-8G-2S/net.if.status[ifOperStatus.{#SNMPINDEX}])<>2 or {$IFCONTROL:"{#IFNAME}"}=0'
+                  name: 'Interface {#IFNAME}({#IFALIAS}): Link down'
+                  expression: '{$IFCONTROL:"{#IFNAME}"}=1 and last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.status[ifOperStatus.{#SNMPINDEX}])=2 and (last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.status[ifOperStatus.{#SNMPINDEX}],#1)<>last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.status[ifOperStatus.{#SNMPINDEX}],#2))'
+                  recovery_expression: 'last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.status[ifOperStatus.{#SNMPINDEX}])<>2 or {$IFCONTROL:"{#IFNAME}"}=0'
               tags:
                 -
                   tag: scope
                   value: performance
             -
-              uuid: d7a049070a434aa5b3a9c320f25eb040
+              uuid: 94fa2681675b4295ad1ee4d86e6f85f0
               expression: |
-                min(/OKTelecomPB-CCR1036-8G-2S/net.if.in.errors[ifInErrors.{#SNMPINDEX}],5m)>{$IF.ERRORS.WARN:"{#IFNAME}"}
-                or min(/OKTelecomPB-CCR1036-8G-2S/net.if.out.errors[ifOutErrors.{#SNMPINDEX}],5m)>{$IF.ERRORS.WARN:"{#IFNAME}"}
+                min(/MikroTik CCR1036-8G-2SPlus - Full/net.if.in.errors[ifInErrors.{#SNMPINDEX}],5m)>{$IF.ERRORS.WARN:"{#IFNAME}"}
+                or min(/MikroTik CCR1036-8G-2SPlus - Full/net.if.out.errors[ifOutErrors.{#SNMPINDEX}],5m)>{$IF.ERRORS.WARN:"{#IFNAME}"}
               recovery_mode: RECOVERY_EXPRESSION
               recovery_expression: |
-                max(/OKTelecomPB-CCR1036-8G-2S/net.if.in.errors[ifInErrors.{#SNMPINDEX}],5m)<{$IF.ERRORS.WARN:"{#IFNAME}"}*0.8
-                and max(/OKTelecomPB-CCR1036-8G-2S/net.if.out.errors[ifOutErrors.{#SNMPINDEX}],5m)<{$IF.ERRORS.WARN:"{#IFNAME}"}*0.8
-              name: 'Interface {#IFNAME}({#IFALIAS}): Alta Taxa de Erro'
-              event_name: 'Interface {#IFNAME}({#IFALIAS}): Alta Taxa de Erro (>{$IF.ERRORS.WARN:"{#IFNAME}"} for 5m)'
+                max(/MikroTik CCR1036-8G-2SPlus - Full/net.if.in.errors[ifInErrors.{#SNMPINDEX}],5m)<{$IF.ERRORS.WARN:"{#IFNAME}"}*0.8
+                and max(/MikroTik CCR1036-8G-2SPlus - Full/net.if.out.errors[ifOutErrors.{#SNMPINDEX}],5m)<{$IF.ERRORS.WARN:"{#IFNAME}"}*0.8
+              name: 'Interface {#IFNAME}({#IFALIAS}): High error rate'
+              event_name: 'Interface {#IFNAME}({#IFALIAS}): High error rate (>{$IF.ERRORS.WARN:"{#IFNAME}"} for 5m)'
               opdata: 'errors in: {ITEM.LASTVALUE1}, errors out: {ITEM.LASTVALUE2}'
               priority: WARNING
-              description: 'Recupera quando abaixo de 80% de {$IF.ERRORS.WARN:"{#IFNAME}"} threshold'
+              description: 'Recovers when below 80% of {$IF.ERRORS.WARN:"{#IFNAME}"} threshold'
               manual_close: 'YES'
               dependencies:
                 -
-                  name: 'Interface {#IFNAME}({#IFALIAS}): Link Inativo'
-                  expression: '{$IFCONTROL:"{#IFNAME}"}=1 and last(/OKTelecomPB-CCR1036-8G-2S/net.if.status[ifOperStatus.{#SNMPINDEX}])=2 and (last(/OKTelecomPB-CCR1036-8G-2S/net.if.status[ifOperStatus.{#SNMPINDEX}],#1)<>last(/OKTelecomPB-CCR1036-8G-2S/net.if.status[ifOperStatus.{#SNMPINDEX}],#2))'
-                  recovery_expression: 'last(/OKTelecomPB-CCR1036-8G-2S/net.if.status[ifOperStatus.{#SNMPINDEX}])<>2 or {$IFCONTROL:"{#IFNAME}"}=0'
+                  name: 'Interface {#IFNAME}({#IFALIAS}): Link down'
+                  expression: '{$IFCONTROL:"{#IFNAME}"}=1 and last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.status[ifOperStatus.{#SNMPINDEX}])=2 and (last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.status[ifOperStatus.{#SNMPINDEX}],#1)<>last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.status[ifOperStatus.{#SNMPINDEX}],#2))'
+                  recovery_expression: 'last(/MikroTik CCR1036-8G-2SPlus - Full/net.if.status[ifOperStatus.{#SNMPINDEX}])<>2 or {$IFCONTROL:"{#IFNAME}"}=0'
               tags:
                 -
                   tag: scope
@@ -1204,53 +1055,53 @@ zabbix_export:
                   value: performance
           graph_prototypes:
             -
-              uuid: 93da4c226ca84d9ca20e4496b2e2201f
+              uuid: 244bb4d31f8240959e1496d3ed88ca95
               name: 'Interface {#IFNAME}({#IFALIAS}): Network traffic'
               graph_items:
                 -
                   drawtype: GRADIENT_LINE
                   color: 1A7C11
                   item:
-                    host: 'OKTelecomPB-CCR1036-8G-2S'
+                    host: 'MikroTik CCR1036-8G-2SPlus - Full'
                     key: 'net.if.in[ifHCInOctets.{#SNMPINDEX}]'
                 -
                   sortorder: '1'
                   drawtype: BOLD_LINE
                   color: 2774A4
                   item:
-                    host: 'OKTelecomPB-CCR1036-8G-2S'
+                    host: 'MikroTik CCR1036-8G-2SPlus - Full'
                     key: 'net.if.out[ifHCOutOctets.{#SNMPINDEX}]'
                 -
                   sortorder: '2'
                   color: F63100
                   yaxisside: RIGHT
                   item:
-                    host: 'OKTelecomPB-CCR1036-8G-2S'
+                    host: 'MikroTik CCR1036-8G-2SPlus - Full'
                     key: 'net.if.out.errors[ifOutErrors.{#SNMPINDEX}]'
                 -
                   sortorder: '3'
                   color: A54F10
                   yaxisside: RIGHT
                   item:
-                    host: 'OKTelecomPB-CCR1036-8G-2S'
+                    host: 'MikroTik CCR1036-8G-2SPlus - Full'
                     key: 'net.if.in.errors[ifInErrors.{#SNMPINDEX}]'
                 -
                   sortorder: '4'
                   color: FC6EA3
                   yaxisside: RIGHT
                   item:
-                    host: 'OKTelecomPB-CCR1036-8G-2S'
+                    host: 'MikroTik CCR1036-8G-2SPlus - Full'
                     key: 'net.if.out.discards[ifOutDiscards.{#SNMPINDEX}]'
                 -
                   sortorder: '5'
                   color: 6C59DC
                   yaxisside: RIGHT
                   item:
-                    host: 'OKTelecomPB-CCR1036-8G-2S'
+                    host: 'MikroTik CCR1036-8G-2SPlus - Full'
                     key: 'net.if.in.discards[ifInDiscards.{#SNMPINDEX}]'
         -
-          uuid: df12abb1cede4e059dd54454550f2501
-          name: 'Descoberta de Storage'
+          uuid: f6f52142e7464eaa829cab9823eff606
+          name: '04 - Disco'
           type: SNMP_AGENT
           snmp_oid: 'discovery[{#FSNAME},1.3.6.1.2.1.25.2.3.1.3,{#ALLOC_UNITS},1.3.6.1.2.1.25.2.3.1.4,{#STORAGE_TYPE},1.3.6.1.2.1.25.2.3.1.2]'
           key: storage.discovery
@@ -1266,32 +1117,31 @@ zabbix_export:
                 macro: '{#STORAGE_TYPE}'
                 value: .+hrStorageFixedDisk
                 formulaid: B
-          description: 'HOST-RESOURCES-MIB::hrDescoberta de Storage com Filtro de Storage'
+          description: 'HOST-RESOURCES-MIB::hrStorage discovery with storage filter'
           item_prototypes:
             -
-              uuid: dbb260b0d9334f60a27e59536c05873c
-              name: 'Disk-{#SNMPINDEX}: Space utilization'
+              uuid: 95b91a8569934b29b89d500cd3673d03
+              name: 'Disco {#SNMPINDEX} - Utilizado %:'
               type: CALCULATED
               key: 'vfs.fs.pused[hrStorageSize.{#SNMPINDEX}]'
               history: 7d
+              trends: 90d
               value_type: FLOAT
               units: '%'
               params: '(last(//vfs.fs.used[hrStorageSize.{#SNMPINDEX}])/last(//vfs.fs.total[hrStorageSize.{#SNMPINDEX}]))*100'
-              description: 'Utilização do espaço em % para Disk-{#SNMPINDEX}'
+              description: 'Space utilization in % for Disk-{#SNMPINDEX}'
               tags:
                 -
-                  tag: component
-                  value: storage
-                -
-                  tag: filesystem
-                  value: '{#FSNAME}'
+                  tag: Informações
+                  value: Discos
             -
-              uuid: 175c5f77af65445fb21d0d876fcb3983
-              name: 'Disk-{#SNMPINDEX}: Total space'
+              uuid: 79e5b2ee35d648d3b3a5f4988f3e7592
+              name: 'Disco {#SNMPINDEX} - Total:'
               type: SNMP_AGENT
               snmp_oid: '1.3.6.1.2.1.25.2.3.1.5.{#SNMPINDEX}'
               key: 'vfs.fs.total[hrStorageSize.{#SNMPINDEX}]'
               history: 7d
+              trends: 90d
               units: B
               description: |
                 MIB: HOST-RESOURCES-MIB
@@ -1311,22 +1161,20 @@ zabbix_export:
                     - '1024'
               tags:
                 -
-                  tag: component
-                  value: storage
-                -
-                  tag: filesystem
-                  value: '{#FSNAME}'
+                  tag: Informações
+                  value: Discos
             -
-              uuid: 827812e4bfef4bc5aa61630a8965d56f
-              name: 'Disk-{#SNMPINDEX}: Used space'
+              uuid: 6bce04e7abea4d16bb901d81e618f186
+              name: 'Disco {#SNMPINDEX} - Utilizado Bytes:'
               type: SNMP_AGENT
               snmp_oid: '1.3.6.1.2.1.25.2.3.1.6.{#SNMPINDEX}'
               key: 'vfs.fs.used[hrStorageSize.{#SNMPINDEX}]'
               history: 7d
+              trends: 90d
               units: B
               description: |
                 MIB: HOST-RESOURCES-MIB
-                A quantidade de armazenamento representada por esta entrada que é alocada, em unidades de hrStorageAllocationUnits.
+                The amount of the storage represented by this entry that is allocated, in units of hrStorageAllocationUnits.
               preprocessing:
                 -
                   type: MULTIPLIER
@@ -1334,26 +1182,23 @@ zabbix_export:
                     - '1024'
               tags:
                 -
-                  tag: component
-                  value: storage
-                -
-                  tag: filesystem
-                  value: '{#FSNAME}'
+                  tag: Informações
+                  value: Discos
           trigger_prototypes:
             -
-              uuid: 72a2fc862c354ab0a3d8fb491aaed9e1
+              uuid: 768953b43aab47d0bfcf9eeef75625ad
               expression: |
-                last(/OKTelecomPB-CCR1036-8G-2S/vfs.fs.pused[hrStorageSize.{#SNMPINDEX}])>{$VFS.FS.PUSED.MAX.CRIT:"Disk-{#SNMPINDEX}"} and
-                ((last(/OKTelecomPB-CCR1036-8G-2S/vfs.fs.total[hrStorageSize.{#SNMPINDEX}])-last(/OKTelecomPB-CCR1036-8G-2S/vfs.fs.used[hrStorageSize.{#SNMPINDEX}]))<5G or timeleft(/OKTelecomPB-CCR1036-8G-2S/vfs.fs.pused[hrStorageSize.{#SNMPINDEX}],1h,100)<1d)
-              name: 'Disk-{#SNMPINDEX}: O espaço em disco está criticamente baixo'
-              event_name: 'Disk-{#SNMPINDEX}: O espaço em disco está criticamente baixo (used > {$VFS.FS.PUSED.MAX.CRIT:"Disk-{#SNMPINDEX}"}%)'
+                last(/MikroTik CCR1036-8G-2SPlus - Full/vfs.fs.pused[hrStorageSize.{#SNMPINDEX}])>{$VFS.FS.PUSED.MAX.CRIT:"Disk-{#SNMPINDEX}"} and
+                ((last(/MikroTik CCR1036-8G-2SPlus - Full/vfs.fs.total[hrStorageSize.{#SNMPINDEX}])-last(/MikroTik CCR1036-8G-2SPlus - Full/vfs.fs.used[hrStorageSize.{#SNMPINDEX}]))<5G or timeleft(/MikroTik CCR1036-8G-2SPlus - Full/vfs.fs.pused[hrStorageSize.{#SNMPINDEX}],1h,100)<1d)
+              name: 'Disk-{#SNMPINDEX}: Disk space is critically low'
+              event_name: 'Disk-{#SNMPINDEX}: Disk space is critically low (used > {$VFS.FS.PUSED.MAX.CRIT:"Disk-{#SNMPINDEX}"}%)'
               opdata: 'Space used: {ITEM.LASTVALUE3} of {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
               priority: AVERAGE
               description: |
-                Duas condições devem corresponder: primeiro, a utilização do espaço deve estar acima {$VFS.FS.PUSED.MAX.CRIT:"Disk-{#SNMPINDEX}"}.
-                 A segunda condição deve ser uma das seguintes:
-                 - O espaço livre em disco é inferior a 5G.
-                 - O disco ficará cheio em menos de 24 horas.
+                Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.CRIT:"Disk-{#SNMPINDEX}"}.
+                 Second condition should be one of the following:
+                 - The disk free space is less than 5G.
+                 - The disk will be full in less than 24 hours.
               manual_close: 'YES'
               tags:
                 -
@@ -1363,26 +1208,26 @@ zabbix_export:
                   tag: scope
                   value: capacity
             -
-              uuid: d66a941be43a440fb13386d9a319a5b3
+              uuid: 74b9590a3e2448bc926fdd29bc6ec153
               expression: |
-                last(/OKTelecomPB-CCR1036-8G-2S/vfs.fs.pused[hrStorageSize.{#SNMPINDEX}])>{$VFS.FS.PUSED.MAX.WARN:"Disk-{#SNMPINDEX}"} and
-                ((last(/OKTelecomPB-CCR1036-8G-2S/vfs.fs.total[hrStorageSize.{#SNMPINDEX}])-last(/OKTelecomPB-CCR1036-8G-2S/vfs.fs.used[hrStorageSize.{#SNMPINDEX}]))<10G or timeleft(/OKTelecomPB-CCR1036-8G-2S/vfs.fs.pused[hrStorageSize.{#SNMPINDEX}],1h,100)<1d)
-              name: 'Disk-{#SNMPINDEX}: O espaço em disco está baixo'
-              event_name: 'Disk-{#SNMPINDEX}: O espaço em disco está baixo (used > {$VFS.FS.PUSED.MAX.WARN:"Disk-{#SNMPINDEX}"}%)'
+                last(/MikroTik CCR1036-8G-2SPlus - Full/vfs.fs.pused[hrStorageSize.{#SNMPINDEX}])>{$VFS.FS.PUSED.MAX.WARN:"Disk-{#SNMPINDEX}"} and
+                ((last(/MikroTik CCR1036-8G-2SPlus - Full/vfs.fs.total[hrStorageSize.{#SNMPINDEX}])-last(/MikroTik CCR1036-8G-2SPlus - Full/vfs.fs.used[hrStorageSize.{#SNMPINDEX}]))<10G or timeleft(/MikroTik CCR1036-8G-2SPlus - Full/vfs.fs.pused[hrStorageSize.{#SNMPINDEX}],1h,100)<1d)
+              name: 'Disk-{#SNMPINDEX}: Disk space is low'
+              event_name: 'Disk-{#SNMPINDEX}: Disk space is low (used > {$VFS.FS.PUSED.MAX.WARN:"Disk-{#SNMPINDEX}"}%)'
               opdata: 'Space used: {ITEM.LASTVALUE3} of {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
               priority: WARNING
               description: |
-                Duas condições devem corresponder: primeiro, a utilização do espaço deve estar acima {$VFS.FS.PUSED.MAX.WARN:"Disk-{#SNMPINDEX}"}.
-                 A segunda condição deve ser uma das seguintes:
-                 - O espaço livre em disco é inferior a 10G.
-                 - O disco ficará cheio em menos de 24 horas.
+                Two conditions should match: First, space utilization should be above {$VFS.FS.PUSED.MAX.WARN:"Disk-{#SNMPINDEX}"}.
+                 Second condition should be one of the following:
+                 - The disk free space is less than 10G.
+                 - The disk will be full in less than 24 hours.
               manual_close: 'YES'
               dependencies:
                 -
-                  name: 'Disk-{#SNMPINDEX}: O espaço em disco está criticamente baixo'
+                  name: 'Disk-{#SNMPINDEX}: Disk space is critically low'
                   expression: |
-                    last(/OKTelecomPB-CCR1036-8G-2S/vfs.fs.pused[hrStorageSize.{#SNMPINDEX}])>{$VFS.FS.PUSED.MAX.CRIT:"Disk-{#SNMPINDEX}"} and
-                    ((last(/OKTelecomPB-CCR1036-8G-2S/vfs.fs.total[hrStorageSize.{#SNMPINDEX}])-last(/OKTelecomPB-CCR1036-8G-2S/vfs.fs.used[hrStorageSize.{#SNMPINDEX}]))<5G or timeleft(/OKTelecomPB-CCR1036-8G-2S/vfs.fs.pused[hrStorageSize.{#SNMPINDEX}],1h,100)<1d)
+                    last(/MikroTik CCR1036-8G-2SPlus - Full/vfs.fs.pused[hrStorageSize.{#SNMPINDEX}])>{$VFS.FS.PUSED.MAX.CRIT:"Disk-{#SNMPINDEX}"} and
+                    ((last(/MikroTik CCR1036-8G-2SPlus - Full/vfs.fs.total[hrStorageSize.{#SNMPINDEX}])-last(/MikroTik CCR1036-8G-2SPlus - Full/vfs.fs.used[hrStorageSize.{#SNMPINDEX}]))<5G or timeleft(/MikroTik CCR1036-8G-2SPlus - Full/vfs.fs.pused[hrStorageSize.{#SNMPINDEX}],1h,100)<1d)
               tags:
                 -
                   tag: scope
@@ -1392,7 +1237,7 @@ zabbix_export:
                   value: capacity
           graph_prototypes:
             -
-              uuid: f724179d92fa44b4adc25a2808522fc6
+              uuid: 2cd5ec756edb4c189a003a1cfa4f5cb4
               name: 'Disk-{#SNMPINDEX}: Disk space usage'
               width: '600'
               height: '340'
@@ -1404,25 +1249,19 @@ zabbix_export:
                   calc_fnc: LAST
                   type: GRAPH_SUM
                   item:
-                    host: 'OKTelecomPB-CCR1036-8G-2S'
+                    host: 'MikroTik CCR1036-8G-2SPlus - Full'
                     key: 'vfs.fs.total[hrStorageSize.{#SNMPINDEX}]'
                 -
                   sortorder: '1'
                   color: C80000
                   calc_fnc: LAST
                   item:
-                    host: 'OKTelecomPB-CCR1036-8G-2S'
+                    host: 'MikroTik CCR1036-8G-2SPlus - Full'
                     key: 'vfs.fs.used[hrStorageSize.{#SNMPINDEX}]'
       tags:
         -
-          tag: class
-          value: network
-        -
-          tag: target
-          value: ccr1036-8g-2splus
-        -
-          tag: target
-          value: mikrotik
+          tag: Protocolo
+          value: SNMP
       macros:
         -
           macro: '{$CPU.UTIL.CRIT}'
@@ -1443,40 +1282,16 @@ zabbix_export:
           macro: '{$IFCONTROL}'
           value: '1'
         -
-          macro: '{$IFNAME.LTEMODEM.MATCHES}'
-          value: ^lte
-          description: 'Essa macro é usada na descoberta de modem LTE. Ele pode ser substituído no host.'
-        -
-          macro: '{$IFNAME.WIFI.MATCHES}'
-          value: WIFI
-          description: 'Esta macro é usada na descoberta de canal CAPsMAN AP. Ele pode ser substituído no nível do host.'
-        -
-          macro: '{$LTEMODEM.RSRP.MIN.WARN}'
-          value: '-100'
-          description: 'O valor mínimo de RSRP do modem LTE para expressão de gatilho de aviso.'
-        -
-          macro: '{$LTEMODEM.RSRQ.MIN.WARN}'
-          value: '-20'
-          description: 'O valor mínimo de RSRQ do modem LTE para expressão de gatilho de aviso.'
-        -
-          macro: '{$LTEMODEM.RSSI.MIN.WARN}'
-          value: '-100'
-          description: 'O valor mínimo de RSSI do modem LTE para expressão de gatilho de aviso.'
-        -
-          macro: '{$LTEMODEM.SINR.MIN.WARN}'
-          value: '0'
-          description: 'O valor mínimo de SINR do modem LTE para expressão de gatilho de aviso.'
-        -
           macro: '{$MEMORY.UTIL.MAX}'
           value: '90'
         -
           macro: '{$NET.IF.IFADMINSTATUS.MATCHES}'
           value: '^.*'
-          description: 'Ignorar Não-Presente(6)'
+          description: 'Ignore notPresent(6)'
         -
           macro: '{$NET.IF.IFADMINSTATUS.NOT_MATCHES}'
           value: ^2$
-          description: 'Ignorar down(2) Status Adminstrativo'
+          description: 'Ignore down(2) administrative status'
         -
           macro: '{$NET.IF.IFALIAS.MATCHES}'
           value: '.*'
@@ -1495,14 +1310,14 @@ zabbix_export:
         -
           macro: '{$NET.IF.IFNAME.NOT_MATCHES}'
           value: '(^Software Loopback Interface|^NULL[0-9.]*$|^[Ll]o[0-9.]*$|^[Ss]ystem$|^Nu[0-9.]*$|^veth[0-9a-z]+$|docker[0-9]+|br-[a-z0-9]{12})'
-          description: 'Filtrar loopbacks, nulos, links docker veth e bridge docker0 por padrão'
+          description: 'Filter out loopbacks, nulls, docker veth links and docker0 bridge by default'
         -
           macro: '{$NET.IF.IFOPERSTATUS.MATCHES}'
           value: '^.*$'
         -
           macro: '{$NET.IF.IFOPERSTATUS.NOT_MATCHES}'
           value: ^6$
-          description: 'Ignorar Não-Presente(6)'
+          description: 'Ignore notPresent(6)'
         -
           macro: '{$NET.IF.IFTYPE.MATCHES}'
           value: '.*'
@@ -1535,7 +1350,7 @@ zabbix_export:
           value: '80'
       dashboards:
         -
-          uuid: 2b37432780ce4af3922f006a0ed8eb63
+          uuid: 75c255d9ccd84db5a4b563c943b1394e
           name: 'Network interfaces'
           pages:
             -
@@ -1561,38 +1376,48 @@ zabbix_export:
                       type: GRAPH_PROTOTYPE
                       name: graphid
                       value:
+                        host: 'MikroTik CCR1036-8G-2SPlus - Full'
                         name: 'Interface {#IFNAME}({#IFALIAS}): Network traffic'
-                        host: 'OKTelecomPB-CCR1036-8G-2S'
       valuemaps:
         -
-          uuid: 6e4c66c16e274c5f8caa1617020884cc
+          uuid: 72f64e97a698449cbd0b6b60bc418b2e
+          name: 'Estado Serviço'
+          mappings:
+            -
+              value: '0'
+              newvalue: Inativo
+            -
+              value: '1'
+              newvalue: Ativo
+        -
+          uuid: 33859113b37a4ed7b36e31ec6d016fd5
           name: 'IF-MIB::ifOperStatus'
           mappings:
             -
               value: '1'
-              newvalue: up
+              newvalue: Ativo
             -
               value: '2'
-              newvalue: down
+              newvalue: Inativo
             -
               value: '4'
               newvalue: Desconhecido
             -
               value: '5'
-              newvalue: dormant
+              newvalue: Parado
             -
               value: '6'
-              newvalue: notPresent
+              newvalue: Não-Presente
             -
               value: '7'
               newvalue: lowerLayerDown
         -
-          uuid: ec8ebd0e1ace4fc4b455cd932c5abb6f
+          uuid: 480088441ae34e1d93cd19fa6379e30f
           name: 'IF-MIB::ifType'
           mappings:
             -
               value: '1'
-              newvalue: other
+              newvalue: outros
             -
               value: '2'
               newvalue: regular1822
@@ -1607,7 +1432,7 @@ zabbix_export:
               newvalue: rfc877x25
             -
               value: '6'
-              newvalue: ethernetCsmacd
+              newvalue: Ethernet
             -
               value: '7'
               newvalue: iso88023Csmacd
@@ -1658,7 +1483,7 @@ zabbix_export:
               newvalue: propPointToPointSerial
             -
               value: '23'
-              newvalue: ppp
+              newvalue: PPP
             -
               value: '24'
               newvalue: softwareLoopback
@@ -1994,7 +1819,7 @@ zabbix_export:
               newvalue: atmSubInterface
             -
               value: '135'
-              newvalue: l2vlan
+              newvalue: VLAN-L2
             -
               value: '136'
               newvalue: l3ipvlan
@@ -2069,10 +1894,10 @@ zabbix_export:
               newvalue: rfc1483
             -
               value: '160'
-              newvalue: usb
+              newvalue: USB
             -
               value: '161'
-              newvalue: ieee8023adLag
+              newvalue: Bonding
             -
               value: '162'
               newvalue: bgppolicyaccounting
@@ -2087,7 +1912,7 @@ zabbix_export:
               newvalue: h323Proxy
             -
               value: '166'
-              newvalue: mpls
+              newvalue: MPLS
             -
               value: '167'
               newvalue: mfSigLink
@@ -2216,7 +2041,7 @@ zabbix_export:
               newvalue: pon622
             -
               value: '209'
-              newvalue: bridge
+              newvalue: Bridge
             -
               value: '210'
               newvalue: linegroup
@@ -2449,22 +2274,12 @@ zabbix_export:
               value: '290'
               newvalue: ghn
         -
-          uuid: 33a1f843573446878618a06307d76f8d
-          name: 'Service state'
+          uuid: a52a4ff531194e7090d12246e011e9d0
+          name: zabbix.host.available
           mappings:
             -
               value: '0'
-              newvalue: Down
-            -
-              value: '1'
-              newvalue: Up
-        -
-          uuid: 4e2dde2550564c3baa667b369e03b257
-          name: zabbix.host.Disponível
-          mappings:
-            -
-              value: '0'
-              newvalue: 'Indisponível'
+              newvalue: Indisponível
             -
               value: '1'
               newvalue: Disponível
@@ -2473,8 +2288,8 @@ zabbix_export:
               newvalue: Desconhecido
   graphs:
     -
-      uuid: 0dc1b1e2370940a2974ce4e00c2aa27e
-      name: 'Utilização de Memória'
+      uuid: 4e79fe4d16424ead95e1d5ea25382120
+      name: 'Memory utilization'
       ymin_type_1: FIXED
       ymax_type_1: FIXED
       graph_items:
@@ -2482,5 +2297,5 @@ zabbix_export:
           drawtype: GRADIENT_LINE
           color: 1A7C11
           item:
-            host: 'OKTelecomPB-CCR1036-8G-2S'
+            host: 'MikroTik CCR1036-8G-2SPlus - Full'
             key: 'vm.memory.util[memoryUsedPercentage.Memory]'
