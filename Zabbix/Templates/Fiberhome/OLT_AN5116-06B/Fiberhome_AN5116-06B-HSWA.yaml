@@ -15,6 +15,9 @@ zabbix_export:
         Blog: https://blog.remontti.com.br/
         Github do Template Original: https://github.com/remontti/Zabbix-Templates/tree/main/FiberHome
         
+        Adaptado por: Luiz Carlos Devilarte (OK Telecom PB)
+        Github do Template Adaptado: https://github.com/Devilarte/Monitoramento/tree/main/Zabbix/Templates/Fiberhome/OLT_AN5116-06B
+
         VISÃO GERAL
         Feito algumas alterações na parte dos templates para adaptar a OLT Fiberhome AN5116-06B.
         
