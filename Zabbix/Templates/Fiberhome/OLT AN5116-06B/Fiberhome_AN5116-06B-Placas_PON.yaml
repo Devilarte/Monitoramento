@@ -1,0 +1,251 @@
+zabbix_export:
+  version: '6.0'
+  date: '2023-02-15T19:33:30Z'
+  groups:
+    -
+      uuid: c7f1dbc657794315a8a74c848479f716
+      name: 'Templates OLT Fiberhome'
+  templates:
+    -
+      uuid: 2429514b4dc44bd3afaace70057ba28e
+      template: 'Fiberhome AN5116-06B - Placas PON'
+      name: 'Fiberhome AN5116-06B - Placas PON'
+      description: |
+        Créditos para o Rudimar Remontti...
+        Blog: https://blog.remontti.com.br/
+        Github do Template Original: https://github.com/remontti/Zabbix-Templates/tree/main/FiberHome
+        
+        VISÃO GERAL
+        Feito algumas alterações na parte dos templates para adaptar a OLT Fiberhome AN5116-06B.
+        
+        COMANDOS NECESSÁRIOS PARA SEREM EXECUTADOS NA OLT
+        FIRMWARE RP0700
+        Admin# cd device
+        Admin\device# set mib performance switch enable
+        Admin# cd gponlinecard
+        Admin\gponlinecard# set pon_traffic_sts switch opt enable 5 0 rtt enable 5 0 traffic enable 5 0
+        
+        FIRMWARE RP1000/RP1200
+        Admin# cd maintenance
+        Admin\maintenance# cd performance
+        Admin\maintenance\performance# set mib performance switch enable
+        Admin\maintenance\performance# show mib performance switch 
+        Mib performance switch is enable.
+        Admin\maintenance\performance# set pon_traffic_sts switch opt enable 5 0 rtt enable 5 0 traffic enable 5 0
+        Admin\maintenance\performance# show pon_traffic_sts switch 
+        Pon_traffic_sort_swicth cfg:
+        Traffic cfg: switch:enable, interval:5, report_delaytime:0 
+        Onu_rttval cfg: switch:enable, interval:5, report_delaytime:0 
+        Opt_pwr cfg: switch:enable, interval:5, report_delaytime:0
+      groups:
+        -
+          name: 'Templates OLT Fiberhome'
+      discovery_rules:
+        -
+          uuid: b12b4749841a426db9338fde79ce61fa
+          name: 'Informações das Placas'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},.1.3.6.1.4.1.5875.800.3.9.2.1.1.2]'
+          key: card.info.discovery
+          delay: 10m
+          lifetime: 60m
+          item_prototypes:
+            -
+              uuid: ff53f3005fad458b86fa937aa464a34f
+              name: 'PON | Slot {#SNMPINDEX} (CPU):'
+              type: SNMP_AGENT
+              snmp_oid: '.1.3.6.1.4.1.5875.800.3.9.2.1.1.8.{#SNMPINDEX}'
+              key: 'cpu.util.[{#SNMPINDEX}]'
+              history: 7d
+              trends: 90d
+              value_type: FLOAT
+              units: '%'
+              preprocessing:
+                -
+                  type: MULTIPLIER
+                  parameters:
+                    - '0.01'
+              tags:
+                -
+                  tag: Application
+                  value: CPU
+            -
+              uuid: 8a481e7401cd440a85418002ad6ac4cf
+              name: 'PON | Slot {#SNMPINDEX} (Memória):'
+              type: SNMP_AGENT
+              snmp_oid: '.1.3.6.1.4.1.5875.800.3.9.2.1.1.9.{#SNMPINDEX}'
+              key: 'memoria.util.[{#SNMPINDEX}]'
+              history: 7d
+              trends: 90d
+              value_type: FLOAT
+              units: '%'
+              preprocessing:
+                -
+                  type: MULTIPLIER
+                  parameters:
+                    - '0.01'
+              tags:
+                -
+                  tag: Application
+                  value: Memoria
+            -
+              uuid: 3b558f3a73ac4724a46f6ba28776d256
+              name: 'PON | Slot {#SNMPINDEX} (Placa Modelo):'
+              type: SNMP_AGENT
+              snmp_oid: '.1.3.6.1.4.1.5875.800.3.9.2.1.1.3.{#SNMPINDEX}'
+              key: 'modelo.placa.[{#SNMPINDEX}]'
+              delay: 1d
+              history: 7d
+              trends: '0'
+              value_type: TEXT
+              tags:
+                -
+                  tag: Application
+                  value: 'Info Placa'
+            -
+              uuid: 7f6b85cde5a34bddb4a17161e6e88e92
+              name: 'PON | Slot {#SNMPINDEX} (N.º Portas):'
+              type: SNMP_AGENT
+              snmp_oid: '.1.3.6.1.4.1.5875.800.3.9.2.1.1.6.{#SNMPINDEX}'
+              key: 'num.portas.[{#SNMPINDEX}]'
+              delay: 1d
+              history: 7d
+              trends: 90d
+              tags:
+                -
+                  tag: Application
+                  value: 'Info Placa'
+            -
+              uuid: 8197aae509fd4e7b9f1abdf9ce1058a1
+              name: 'PON | Slot {#SNMPINDEX} (Software Versão):'
+              type: SNMP_AGENT
+              snmp_oid: '.1.3.6.1.4.1.5875.800.3.9.2.1.1.4.{#SNMPINDEX}'
+              key: 'placa.soft.v.[{#SNMPINDEX}]'
+              delay: 1d
+              history: 7d
+              trends: '0'
+              value_type: TEXT
+              tags:
+                -
+                  tag: Application
+                  value: 'Info Placa'
+            -
+              uuid: fd2ccf97ff96494d9f5d2ce20eee2659
+              name: 'PON | Slot {#SNMPINDEX} (Status):'
+              type: SNMP_AGENT
+              snmp_oid: '.1.3.6.1.4.1.5875.800.3.9.2.1.1.5.{#SNMPINDEX}'
+              key: 'status.placa.[{#SNMPINDEX}]'
+              delay: 5m
+              history: 7d
+              trends: 90d
+              valuemap:
+                name: 'Status Placa PON'
+              tags:
+                -
+                  tag: Application
+                  value: 'Status Placa'
+            -
+              uuid: d0adf33449ff4cab8132c3519df5bae6
+              name: 'PON | Slot {#SNMPINDEX} (Placa Tipo):'
+              type: SNMP_AGENT
+              snmp_oid: '.1.3.6.1.4.1.5875.800.3.9.2.1.1.2.{#SNMPINDEX}'
+              key: 'tipo.placa.[{#SNMPINDEX}]'
+              delay: 1d
+              history: 7d
+              trends: 90d
+              tags:
+                -
+                  tag: Application
+                  value: 'Info Placa'
+          graph_prototypes:
+            -
+              uuid: f495a670b55445159165d9ad357a5c58
+              name: 'Slot {#SNMPINDEX}: CPU Utilizada'
+              graph_items:
+                -
+                  drawtype: GRADIENT_LINE
+                  color: 673AB7
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Fiberhome AN5116-06B - Placas PON'
+                    key: 'cpu.util.[{#SNMPINDEX}]'
+            -
+              uuid: f621c82092514a7f83e3f65a76098b32
+              name: 'Slot {#SNMPINDEX}: Memoria Utilizada'
+              graph_items:
+                -
+                  drawtype: GRADIENT_LINE
+                  color: FF8A65
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Fiberhome AN5116-06B - Placas PON'
+                    key: 'memoria.util.[{#SNMPINDEX}]'
+        -
+          uuid: 5c842f356b704baa8ae10f0fc51df17a
+          name: 'Informações das PONs'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},.1.3.6.1.4.1.5875.800.3.9.3.4.1.3]'
+          key: pons.info.discovery
+          delay: 10m
+          lifetime: 60m
+          item_prototypes:
+            -
+              uuid: a09f695613c34f87b8e42cc862d76caf
+              name: '{#SNMPVALUE} - Clientes:'
+              type: SNMP_AGENT
+              snmp_oid: 'iso.3.6.1.4.1.5875.800.3.9.3.4.1.12.{#SNMPINDEX}'
+              key: 'pon.clientes.[{#SNMPINDEX}]'
+              delay: 10m
+              history: 7d
+              trends: 90d
+              tags:
+                -
+                  tag: Application
+                  value: 'PONs Clientes'
+            -
+              uuid: 23e20e25323044b0ac0c6425a9b570ac
+              name: '{#SNMPVALUE} - Status:'
+              type: SNMP_AGENT
+              snmp_oid: 'iso.3.6.1.2.1.2.2.1.8.{#SNMPINDEX}'
+              key: 'pon.status.[{#SNMPINDEX}]'
+              delay: 10m
+              history: 7d
+              trends: 90d
+              valuemap:
+                name: 'Status Placa PON'
+              tags:
+                -
+                  tag: Application
+                  value: 'PONs Info'
+              trigger_prototypes:
+                -
+                  uuid: 0cb01311a46541728b7e21c78aa96f50
+                  expression: 'last(/Fiberhome AN5116-06B - Placas PON/pon.status.[{#SNMPINDEX}])=2'
+                  name: '{#SNMPVALUE} - OFFLINE!'
+                  priority: INFO
+          graph_prototypes:
+            -
+              uuid: d85f4b8fd093423fa4240c9ee1ea43f8
+              name: 'Clientes {#SNMPVALUE}'
+              graph_items:
+                -
+                  drawtype: GRADIENT_LINE
+                  color: 199C0D
+                  item:
+                    host: 'Fiberhome AN5116-06B - Placas PON'
+                    key: 'pon.clientes.[{#SNMPINDEX}]'
+      tags:
+        -
+          tag: Protocolo
+          value: SNMP
+      valuemaps:
+        -
+          uuid: 4ce269caf1f24227aae5605ee2b9c975
+          name: 'Status Placa PON'
+          mappings:
+            -
+              value: '1'
+              newvalue: ONLINE
+            -
+              value: '2'
+              newvalue: OFFLINE

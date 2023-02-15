@@ -1,0 +1,214 @@
+zabbix_export:
+  version: '6.0'
+  date: '2023-02-15T19:31:02Z'
+  groups:
+    -
+      uuid: c7f1dbc657794315a8a74c848479f716
+      name: 'Templates OLT Fiberhome'
+  templates:
+    -
+      uuid: e822924e9d7f4bc693e9682df15b8c12
+      template: 'Fiberhome AN5116-06B - HSWA'
+      name: 'Fiberhome AN5116-06B - HSWA'
+      description: |
+        Créditos para o Rudimar Remontti...
+        Blog: https://blog.remontti.com.br/
+        Github do Template Original: https://github.com/remontti/Zabbix-Templates/tree/main/FiberHome
+        
+        VISÃO GERAL
+        Feito algumas alterações na parte dos templates para adaptar a OLT Fiberhome AN5116-06B.
+        
+        COMANDOS NECESSÁRIOS PARA SEREM EXECUTADOS NA OLT
+        FIRMWARE RP0700
+        Admin# cd device
+        Admin\device# set mib performance switch enable
+        Admin# cd gponlinecard
+        Admin\gponlinecard# set pon_traffic_sts switch opt enable 5 0 rtt enable 5 0 traffic enable 5 0
+        
+        FIRMWARE RP1000/RP1200
+        Admin# cd maintenance
+        Admin\maintenance# cd performance
+        Admin\maintenance\performance# set mib performance switch enable
+        Admin\maintenance\performance# show mib performance switch 
+        Mib performance switch is enable.
+        Admin\maintenance\performance# set pon_traffic_sts switch opt enable 5 0 rtt enable 5 0 traffic enable 5 0
+        Admin\maintenance\performance# show pon_traffic_sts switch 
+        Pon_traffic_sort_swicth cfg:
+        Traffic cfg: switch:enable, interval:5, report_delaytime:0 
+        Onu_rttval cfg: switch:enable, interval:5, report_delaytime:0 
+        Opt_pwr cfg: switch:enable, interval:5, report_delaytime:0
+      groups:
+        -
+          name: 'Templates OLT Fiberhome'
+      items:
+        -
+          uuid: 04648b9efbcd4a5f8c8e338924560c3c
+          name: 'HSWA - Hardware (CPU):'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.5875.800.3.9.8.1.1.5.9
+          key: hswa.cpu
+          delay: 5m
+          history: 7d
+          trends: 90d
+          value_type: FLOAT
+          units: '%'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.01'
+          tags:
+            -
+              tag: Application
+              value: 'HSWA Infos'
+          triggers:
+            -
+              uuid: 902f931b00f14f3fadfd9ac45b460472
+              expression: 'avg(/Fiberhome AN5116-06B - HSWA/hswa.cpu,5m)>60'
+              name: 'Processamento de CPU - ALTO!'
+              priority: WARNING
+        -
+          uuid: 069ec0e9e7514482945aac0690209dc9
+          name: 'HSWA - Hardware (Versão):'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.5875.800.3.9.4.4.0
+          key: hswa.had.versao
+          delay: 1d
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+          tags:
+            -
+              tag: Application
+              value: 'HSWA Infos'
+          triggers:
+            -
+              uuid: 8933171f97234f82b8320d17c7465d77
+              expression: '(last(/Fiberhome AN5116-06B - HSWA/hswa.had.versao,#1)<>last(/Fiberhome AN5116-06B - HSWA/hswa.had.versao,#2))>0'
+              name: 'Versão do Hardware - ALTERADA!'
+              priority: INFO
+        -
+          uuid: 5402d496aec24cb187dd04e168ef6d29
+          name: 'HSWA - Hardware (Memória):'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.5875.800.3.9.8.1.1.6.9
+          key: hswa.mem
+          delay: 5m
+          history: 7d
+          trends: 90d
+          value_type: FLOAT
+          units: '%'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.01'
+          tags:
+            -
+              tag: Application
+              value: 'HSWA Infos'
+          triggers:
+            -
+              uuid: 3905e4ed7b0b433eae253dba49a69640
+              expression: 'avg(/Fiberhome AN5116-06B - HSWA/hswa.mem,5m)>75'
+              name: 'Uso de Memória - ALTO!'
+              priority: WARNING
+        -
+          uuid: 627ccda40f524064a8a37815185f61fb
+          name: 'HSWA - Software (Versao):'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.5875.800.3.9.4.3.0
+          key: hswa.soft.versao
+          delay: 1d
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+          tags:
+            -
+              tag: Application
+              value: 'HSWA Infos'
+          triggers:
+            -
+              uuid: db57f78655614113a8ab2e20f7eab003
+              expression: '(last(/Fiberhome AN5116-06B - HSWA/hswa.soft.versao,#1)<>last(/Fiberhome AN5116-06B - HSWA/hswa.soft.versao,#2))>0'
+              name: 'Versão do Software - ALTERADA!'
+              priority: INFO
+        -
+          uuid: 90010a1278094bb59610913864bb958b
+          name: 'HSWA - Hardware (Temperatura):'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.5875.800.3.9.4.5.0
+          key: hswa.temperatura
+          delay: 5m
+          history: 7d
+          trends: 90d
+          units: °C
+          tags:
+            -
+              tag: Application
+              value: 'HSWA Infos'
+          triggers:
+            -
+              uuid: 7d68fd3a373049bd9853166ac13e6d50
+              expression: 'avg(/Fiberhome AN5116-06B - HSWA/hswa.temperatura,5m)>55'
+              name: 'Nível de Temperatura - ALTA!'
+              priority: WARNING
+        -
+          uuid: 461b610028e2404e925f6ef2ed07cbe7
+          name: 'HSWA - Hardware (Uptime):'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.1.3.0
+          key: hswa.uptime
+          delay: 5m
+          history: 7d
+          trends: 90d
+          units: uptime
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.01'
+          tags:
+            -
+              tag: Application
+              value: 'HSWA Infos'
+          triggers:
+            -
+              uuid: a6b842b4280d41f3a47858c253461ef5
+              expression: 'change(/Fiberhome AN5116-06B - HSWA/hswa.uptime)<{TRIGGER.VALUE}'
+              name: 'OLT - REINICIOU!'
+              priority: INFO
+      tags:
+        -
+          tag: Protocolo
+          value: SNMP
+  graphs:
+    -
+      uuid: 2d3a742768ab46ae9df0170c15a22bd9
+      name: 'CPU / Memoria'
+      graph_items:
+        -
+          drawtype: BOLD_LINE
+          color: 0040FF
+          item:
+            host: 'Fiberhome AN5116-06B - HSWA'
+            key: hswa.cpu
+        -
+          sortorder: '1'
+          drawtype: BOLD_LINE
+          color: 8F2809
+          yaxisside: RIGHT
+          item:
+            host: 'Fiberhome AN5116-06B - HSWA'
+            key: hswa.mem
+    -
+      uuid: 9865496f7db8463cbbc677788f1f8dc4
+      name: 'Temperatura HSWA'
+      graph_items:
+        -
+          drawtype: GRADIENT_LINE
+          color: 039BE5
+          yaxisside: RIGHT
+          item:
+            host: 'Fiberhome AN5116-06B - HSWA'
+            key: hswa.temperatura

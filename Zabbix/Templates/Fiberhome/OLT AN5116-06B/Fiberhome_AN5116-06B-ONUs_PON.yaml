@@ -1,0 +1,197 @@
+zabbix_export:
+  version: '6.0'
+  date: '2023-02-15T19:33:14Z'
+  groups:
+    -
+      uuid: c7f1dbc657794315a8a74c848479f716
+      name: 'Templates OLT Fiberhome'
+  templates:
+    -
+      uuid: b3d9bd76e848438cb69815ae8de5c5e6
+      template: 'Fiberhome AN5116-06B - ONUs por PON'
+      name: 'Fiberhome AN5116-06B - ONUs por PON'
+      description: |
+        Créditos para o Rudimar Remontti...
+        Blog: https://blog.remontti.com.br/
+        Github do Template Original: https://github.com/remontti/Zabbix-Templates/tree/main/FiberHome
+        
+        VISÃO GERAL
+        Feito algumas alterações na parte dos templates para adaptar a OLT Fiberhome AN5116-06B.
+        
+        COMANDOS NECESSÁRIOS PARA SEREM EXECUTADOS NA OLT
+        FIRMWARE RP0700
+        Admin# cd device
+        Admin\device# set mib performance switch enable
+        Admin# cd gponlinecard
+        Admin\gponlinecard# set pon_traffic_sts switch opt enable 5 0 rtt enable 5 0 traffic enable 5 0
+        
+        FIRMWARE RP1000/RP1200
+        Admin# cd maintenance
+        Admin\maintenance# cd performance
+        Admin\maintenance\performance# set mib performance switch enable
+        Admin\maintenance\performance# show mib performance switch 
+        Mib performance switch is enable.
+        Admin\maintenance\performance# set pon_traffic_sts switch opt enable 5 0 rtt enable 5 0 traffic enable 5 0
+        Admin\maintenance\performance# show pon_traffic_sts switch 
+        Pon_traffic_sort_swicth cfg:
+        Traffic cfg: switch:enable, interval:5, report_delaytime:0 
+        Onu_rttval cfg: switch:enable, interval:5, report_delaytime:0 
+        Opt_pwr cfg: switch:enable, interval:5, report_delaytime:0
+      groups:
+        -
+          name: 'Templates OLT Fiberhome'
+      items:
+        -
+          uuid: d555c1dbb00d401b82df68769e7a9b5a
+          name: 'Total Onus'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.5875.800.3.9.4.6.0
+          key: total.onu
+          delay: 10m
+          history: 7d
+          trends: 90d
+          tags:
+            -
+              tag: Application
+              value: 'Total de ONUs'
+      discovery_rules:
+        -
+          uuid: 5ff0c2c2b9a443dfaf2e5e7ff245e8d8
+          name: 'Informações das ONUs por PON'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},.1.3.6.1.4.1.5875.800.3.9.3.3.1.2]'
+          key: tabela.onus.pon
+          delay: '1h;1m/1-7,12:00-12:01'
+          lifetime: 3d
+          item_prototypes:
+            -
+              uuid: 9fa81992810542f1a502919dd66253fd
+              name: 'ONU {#SNMPVALUE} - Sinal RX:'
+              type: SNMP_AGENT
+              snmp_oid: '.1.3.6.1.4.1.5875.800.3.9.3.3.1.6.{#SNMPINDEX}'
+              key: 'pon.rx.onu[{#SNMPINDEX}]'
+              delay: 1h
+              history: 7d
+              trends: 90d
+              value_type: FLOAT
+              units: dBm
+              preprocessing:
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - '-'
+                    - ''
+                -
+                  type: MULTIPLIER
+                  parameters:
+                    - '0.01'
+              tags:
+                -
+                  tag: Application
+                  value: 'ONU PON'
+              trigger_prototypes:
+                -
+                  uuid: d6953e1c90564903a2535d47b75a8053
+                  expression: |
+                    ({TRIGGER.VALUE}=0 and avg(/Fiberhome AN5116-06B - ONUs por PON/pon.rx.onu[{#SNMPINDEX}],3h)<-27) or
+                    ({TRIGGER.VALUE}=1 and avg(/Fiberhome AN5116-06B - ONUs por PON/pon.rx.onu[{#SNMPINDEX}],3h)<-30)
+                  name: 'ONU {#SNMPVALUE} - SINAL ALTO!'
+                  priority: WARNING
+                  manual_close: 'YES'
+            -
+              uuid: b2e73821c4194f2589a7f07e5dc7eadb
+              name: 'ONU {#SNMPVALUE} - Status:'
+              type: SNMP_AGENT
+              snmp_oid: '.1.3.6.1.4.1.5875.800.3.10.1.1.11.{#SNMPINDEX}'
+              key: 'pon.status.onu[{#SNMPINDEX}]'
+              delay: 10m
+              history: 7d
+              trends: 90d
+              valuemap:
+                name: 'ONU PON Status'
+              tags:
+                -
+                  tag: Application
+                  value: 'ONU PON STATUS'
+              trigger_prototypes:
+                -
+                  uuid: 35c31641f7914ac39fe9d5a2f9274332
+                  expression: 'sum(/Fiberhome AN5116-06B - ONUs por PON/pon.status.onu[{#SNMPINDEX}],#2)=0'
+                  name: 'ONU {#SNMPVALUE}  - SEM SINAL!'
+                  priority: AVERAGE
+            -
+              uuid: 1a274416851643b48be9273774786ec1
+              name: 'ONU {#SNMPVALUE} - Sinal TX:'
+              type: SNMP_AGENT
+              snmp_oid: '.1.3.6.1.4.1.5875.800.3.9.3.3.1.7.{#SNMPINDEX}'
+              key: 'pon.tx.onu[{#SNMPINDEX}]'
+              delay: 1h
+              history: 7d
+              trends: 90d
+              status: DISABLED
+              discover: NO_DISCOVER
+              value_type: FLOAT
+              units: dBm
+              preprocessing:
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - '-'
+                    - ''
+                -
+                  type: MULTIPLIER
+                  parameters:
+                    - '0.01'
+              tags:
+                -
+                  tag: Application
+                  value: 'ONU PON'
+          graph_prototypes:
+            -
+              uuid: 12ddf91c850d44848b4830b09ee9c337
+              name: 'Sinal ONU {#SNMPVALUE}'
+              graph_items:
+                -
+                  color: '005500'
+                  item:
+                    host: 'Fiberhome AN5116-06B - ONUs por PON'
+                    key: 'pon.tx.onu[{#SNMPINDEX}]'
+                -
+                  sortorder: '1'
+                  color: DD0000
+                  item:
+                    host: 'Fiberhome AN5116-06B - ONUs por PON'
+                    key: 'pon.rx.onu[{#SNMPINDEX}]'
+      tags:
+        -
+          tag: Protocolo
+          value: SNMP
+      valuemaps:
+        -
+          uuid: 6682c0767b214070b1a461e0d7abaf19
+          name: 'ONU PON Status'
+          mappings:
+            -
+              value: '0'
+              newvalue: 'LINK LOSS'
+            -
+              value: '1'
+              newvalue: 'ON LINE'
+            -
+              value: '2'
+              newvalue: 'POWER OFF'
+            -
+              value: '3'
+              newvalue: 'OFF LINE'
+  graphs:
+    -
+      uuid: e90b270c51104196b6870bf3303ad59a
+      name: 'Total de ONUs'
+      graph_items:
+        -
+          sortorder: '1'
+          drawtype: GRADIENT_LINE
+          color: FF8000
+          item:
+            host: 'Fiberhome AN5116-06B - ONUs por PON'
+            key: total.onu

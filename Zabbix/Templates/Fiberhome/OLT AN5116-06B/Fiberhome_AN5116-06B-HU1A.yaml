@@ -1,0 +1,680 @@
+zabbix_export:
+  version: '6.0'
+  date: '2023-02-15T19:32:19Z'
+  groups:
+    -
+      uuid: c7f1dbc657794315a8a74c848479f716
+      name: 'Templates OLT Fiberhome'
+  templates:
+    -
+      uuid: 572b0bc1c1194d6c89d68fc3e3982c34
+      template: 'Fiberhome AN5116-06B - HU1A'
+      name: 'Fiberhome AN5116-06B - HU1A'
+      description: |
+        Créditos para o Rudimar Remontti...
+        Blog: https://blog.remontti.com.br/
+        Github do Template Original: https://github.com/remontti/Zabbix-Templates/tree/main/FiberHome
+        
+        VISÃO GERAL
+        Feito algumas alterações na parte dos templates para adaptar a OLT Fiberhome AN5116-06B.
+        
+        COMANDOS NECESSÁRIOS PARA SEREM EXECUTADOS NA OLT
+        FIRMWARE RP0700
+        Admin# cd device
+        Admin\device# set mib performance switch enable
+        Admin# cd gponlinecard
+        Admin\gponlinecard# set pon_traffic_sts switch opt enable 5 0 rtt enable 5 0 traffic enable 5 0
+        
+        FIRMWARE RP1000/RP1200
+        Admin# cd maintenance
+        Admin\maintenance# cd performance
+        Admin\maintenance\performance# set mib performance switch enable
+        Admin\maintenance\performance# show mib performance switch 
+        Mib performance switch is enable.
+        Admin\maintenance\performance# set pon_traffic_sts switch opt enable 5 0 rtt enable 5 0 traffic enable 5 0
+        Admin\maintenance\performance# show pon_traffic_sts switch 
+        Pon_traffic_sort_swicth cfg:
+        Traffic cfg: switch:enable, interval:5, report_delaytime:0 
+        Onu_rttval cfg: switch:enable, interval:5, report_delaytime:0 
+        Opt_pwr cfg: switch:enable, interval:5, report_delaytime:0
+      groups:
+        -
+          name: 'Templates OLT Fiberhome'
+      items:
+        -
+          uuid: 16ea609a69c94bda9f56607b1cd7a6c0
+          name: 'HU1A | XFP 19/1 - Bits RX:'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.31.1.1.1.6.524288
+          key: in.19.1
+          history: 7d
+          trends: 90d
+          value_type: FLOAT
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: 'Interfaces Slot19'
+        -
+          uuid: b80e00ccc08c4dfba941a9062aa20200
+          name: 'HU1A | SFP 19/2 - Bits RX:'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.31.1.1.1.6.1048576
+          key: in.19.2
+          history: 7d
+          trends: 90d
+          value_type: FLOAT
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: 'Interfaces Slot19'
+        -
+          uuid: 7048d7fc6ba3419d91d2340c9c1a3165
+          name: 'HU1A | SFP 19/3 - Bits RX:'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.31.1.1.1.6.1572864
+          key: in.19.3
+          history: 7d
+          trends: 90d
+          value_type: FLOAT
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: 'Interfaces Slot19'
+        -
+          uuid: 0da003464a0b40279ecc7918f3843a0f
+          name: 'HU1A | SFP 19/4 - Bits RX:'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.31.1.1.1.6.2097152
+          key: in.19.4
+          history: 7d
+          trends: 90d
+          value_type: FLOAT
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: 'Interfaces Slot19'
+        -
+          uuid: 985f9e3b0246440e8a6f8bf35d9c6c43
+          name: 'HU1A | SFP 19/5 - Bits RX:'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.31.1.1.1.6.2621440
+          key: in.19.5
+          history: 7d
+          trends: 90d
+          value_type: FLOAT
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: 'Interfaces Slot19'
+        -
+          uuid: 0d9770471a594b7ba380b3cec0b87033
+          name: 'HU1A | XFP 20/1 - Bits RX:'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.31.1.1.1.6.5767168
+          key: in.20.1
+          history: 7d
+          trends: 90d
+          value_type: FLOAT
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: 'Interfaces Slot20'
+        -
+          uuid: 94d371cb9bd84028aa03e8ff2204f9ef
+          name: 'HU1A | SFP 20/2 - Bits RX:'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.31.1.1.1.6.6291456
+          key: in.20.2
+          history: 7d
+          trends: 90d
+          value_type: FLOAT
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: 'Interfaces Slot20'
+        -
+          uuid: 198153e502314b7992c6c6cb7d9abd49
+          name: 'HU1A | SFP 20/3 - Bits RX:'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.31.1.1.1.6.6815744
+          key: in.20.3
+          history: 7d
+          trends: 90d
+          value_type: FLOAT
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: 'Interfaces Slot20'
+        -
+          uuid: fc6bced746f6436b9ae8169fc0cece61
+          name: 'HU1A | SFP 20/4 - Bits RX:'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.31.1.1.1.6.7340032
+          key: in.20.4
+          history: 7d
+          trends: 90d
+          value_type: FLOAT
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: 'Interfaces Slot20'
+        -
+          uuid: f51c349052144a7f850207cb290a80f8
+          name: 'HU1A | SFP 20/5 - Bits RX:'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.31.1.1.1.6.7864320
+          key: in.20.5
+          history: 7d
+          trends: 90d
+          value_type: FLOAT
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: 'Interfaces Slot20'
+        -
+          uuid: ac531ccb6d87423299508f8759c2a352
+          name: 'HU1A | XFP 19/1 - Bits TX:'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.31.1.1.1.10.524288
+          key: out.19.1
+          history: 7d
+          trends: 90d
+          value_type: FLOAT
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: 'Interfaces Slot19'
+        -
+          uuid: 9c41b946b9ab47f0840e9491b8600340
+          name: 'HU1A | SFP 19/2 - Bits TX:'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.31.1.1.1.10.1048576
+          key: out.19.2
+          history: 7d
+          trends: 90d
+          value_type: FLOAT
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: 'Interfaces Slot19'
+        -
+          uuid: a02d3c48be5e44a288e58ec73552ca41
+          name: 'HU1A | SFP 19/3 - Bits TX:'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.31.1.1.1.10.1572864
+          key: out.19.3
+          history: 7d
+          trends: 90d
+          value_type: FLOAT
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: 'Interfaces Slot19'
+        -
+          uuid: 2606a31e4e934187b790264432ee1271
+          name: 'HU1A | SFP 19/4 - Bits TX:'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.31.1.1.1.10.2097152
+          key: out.19.4
+          history: 7d
+          trends: 90d
+          value_type: FLOAT
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: 'Interfaces Slot19'
+        -
+          uuid: 11e8b42155334e33bd35bcc2e2ec886b
+          name: 'HU1A | SFP 19/5 - Bits TX:'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.31.1.1.1.10.2621440
+          key: out.19.5
+          history: 7d
+          trends: 90d
+          value_type: FLOAT
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: 'Interfaces Slot19'
+        -
+          uuid: 0083253ffa3440f6ad4766c410ad5df8
+          name: 'HU1A | XFP 20/1 - Bits TX:'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.31.1.1.1.10.5767168
+          key: out.20.1
+          history: 7d
+          trends: 90d
+          value_type: FLOAT
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: 'Interfaces Slot20'
+        -
+          uuid: a91575ba1c954511bef3fec84d579bd7
+          name: 'HU1A | SFP 20/2 - Bits TX:'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.31.1.1.1.10.6291456
+          key: out.20.2
+          history: 7d
+          trends: 90d
+          value_type: FLOAT
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: 'Interfaces Slot20'
+        -
+          uuid: 06588444f80343c5bbf03b18bc0d0021
+          name: 'HU1A | SFP 20/3 - Bits TX:'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.31.1.1.1.10.6815744
+          key: out.20.3
+          history: 7d
+          trends: 90d
+          value_type: FLOAT
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: 'Interfaces Slot20'
+        -
+          uuid: e1eb643b51a444b1bda0efc8325aea45
+          name: 'HU1A | SFP 20/4 - Bits TX:'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.31.1.1.1.10.7340032
+          key: out.20.4
+          history: 7d
+          trends: 90d
+          value_type: FLOAT
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: 'Interfaces Slot20'
+        -
+          uuid: 6bca7435543a43dd8a5d976c86cde763
+          name: 'HU1A | SFP 20/5 - Bits TX:'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.31.1.1.1.10.7864320
+          key: out.20.5
+          history: 7d
+          trends: 90d
+          value_type: FLOAT
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: 'Interfaces Slot20'
+      tags:
+        -
+          tag: Protocolo
+          value: SNMP
+  graphs:
+    -
+      uuid: 5c1d37e7b6bd4e4f9a675a8035285e3b
+      name: 'SFP 19/2'
+      show_work_period: 'NO'
+      graph_items:
+        -
+          drawtype: GRADIENT_LINE
+          color: 00CC00
+          item:
+            host: 'Fiberhome AN5116-06B - HU1A'
+            key: in.19.2
+        -
+          sortorder: '1'
+          drawtype: GRADIENT_LINE
+          color: 0000CC
+          item:
+            host: 'Fiberhome AN5116-06B - HU1A'
+            key: out.19.2
+    -
+      uuid: 29dde12b59b64faa8def2db1055c4065
+      name: 'SFP 19/3'
+      graph_items:
+        -
+          drawtype: GRADIENT_LINE
+          color: 00CC00
+          item:
+            host: 'Fiberhome AN5116-06B - HU1A'
+            key: in.19.3
+        -
+          sortorder: '1'
+          drawtype: GRADIENT_LINE
+          color: 0000CC
+          item:
+            host: 'Fiberhome AN5116-06B - HU1A'
+            key: out.19.3
+    -
+      uuid: d82963ada7194d5e825aa4f45b8338d3
+      name: 'SFP 19/4'
+      graph_items:
+        -
+          drawtype: GRADIENT_LINE
+          color: '009900'
+          item:
+            host: 'Fiberhome AN5116-06B - HU1A'
+            key: in.19.4
+        -
+          sortorder: '1'
+          drawtype: GRADIENT_LINE
+          color: '000099'
+          item:
+            host: 'Fiberhome AN5116-06B - HU1A'
+            key: out.19.4
+    -
+      uuid: 2d5e7c4cf92c4f9689a8ec562e8a1f8f
+      name: 'SFP 19/5'
+      graph_items:
+        -
+          drawtype: GRADIENT_LINE
+          color: 00BB00
+          item:
+            host: 'Fiberhome AN5116-06B - HU1A'
+            key: in.19.5
+        -
+          sortorder: '1'
+          drawtype: GRADIENT_LINE
+          color: 0000AA
+          item:
+            host: 'Fiberhome AN5116-06B - HU1A'
+            key: out.19.5
+    -
+      uuid: 2150823696604ff8ba8ea628d9b31930
+      name: 'SFP 20/2'
+      graph_items:
+        -
+          drawtype: GRADIENT_LINE
+          color: 00BB00
+          item:
+            host: 'Fiberhome AN5116-06B - HU1A'
+            key: in.20.2
+        -
+          sortorder: '1'
+          drawtype: GRADIENT_LINE
+          color: 0000BB
+          item:
+            host: 'Fiberhome AN5116-06B - HU1A'
+            key: out.20.2
+    -
+      uuid: e95a4470109e4f5abb0eebe37cd33c71
+      name: 'SFP 20/3'
+      graph_items:
+        -
+          drawtype: GRADIENT_LINE
+          color: 00C800
+          item:
+            host: 'Fiberhome AN5116-06B - HU1A'
+            key: in.20.3
+        -
+          sortorder: '1'
+          drawtype: GRADIENT_LINE
+          color: 0000CC
+          item:
+            host: 'Fiberhome AN5116-06B - HU1A'
+            key: out.20.3
+    -
+      uuid: 75104ae44ac646a4ad35b6f60111d797
+      name: 'SFP 20/4'
+      graph_items:
+        -
+          drawtype: GRADIENT_LINE
+          color: 00C800
+          item:
+            host: 'Fiberhome AN5116-06B - HU1A'
+            key: in.20.4
+        -
+          sortorder: '1'
+          drawtype: GRADIENT_LINE
+          color: 0000AA
+          item:
+            host: 'Fiberhome AN5116-06B - HU1A'
+            key: out.20.4
+    -
+      uuid: 1684249bdaaf49359d43b4c7d32d8a11
+      name: 'SFP 20/5'
+      graph_items:
+        -
+          drawtype: GRADIENT_LINE
+          color: 00BB00
+          item:
+            host: 'Fiberhome AN5116-06B - HU1A'
+            key: in.20.5
+        -
+          sortorder: '1'
+          drawtype: GRADIENT_LINE
+          color: 0000CC
+          item:
+            host: 'Fiberhome AN5116-06B - HU1A'
+            key: out.20.5
+    -
+      uuid: be358f5dbf3d4e40bc7c395197fa429e
+      name: 'XFP 19/1'
+      show_work_period: 'NO'
+      graph_items:
+        -
+          drawtype: GRADIENT_LINE
+          color: 00DD00
+          item:
+            host: 'Fiberhome AN5116-06B - HU1A'
+            key: in.19.1
+        -
+          sortorder: '1'
+          drawtype: GRADIENT_LINE
+          color: 0000DD
+          item:
+            host: 'Fiberhome AN5116-06B - HU1A'
+            key: out.19.1
+    -
+      uuid: d662d2006a8e46d59957482a7c88880f
+      name: 'XFP 20/1'
+      graph_items:
+        -
+          drawtype: GRADIENT_LINE
+          color: 00AA00
+          item:
+            host: 'Fiberhome AN5116-06B - HU1A'
+            key: in.20.1
+        -
+          sortorder: '1'
+          drawtype: GRADIENT_LINE
+          color: 0000CC
+          item:
+            host: 'Fiberhome AN5116-06B - HU1A'
+            key: out.20.1
