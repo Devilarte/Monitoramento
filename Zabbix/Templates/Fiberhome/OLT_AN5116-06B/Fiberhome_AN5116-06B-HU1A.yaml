@@ -1,6 +1,6 @@
 zabbix_export:
   version: '6.0'
-  date: '2023-02-15T19:32:19Z'
+  date: '2023-02-15T19:54:30Z'
   groups:
     -
       uuid: c7f1dbc657794315a8a74c848479f716
@@ -12,19 +12,22 @@ zabbix_export:
       name: 'Fiberhome AN5116-06B - HU1A'
       description: |
         Créditos para o Rudimar Remontti...
-        Blog: https://blog.remontti.com.br/
+        Blog: https://blog.remontti.com.br
         Github do Template Original: https://github.com/remontti/Zabbix-Templates/tree/main/FiberHome
+        
+        Adaptado por: Luiz Carlos Devilarte - OK Telecom PB
+        Github do Template Adaptado: https://github.com/Devilarte/Monitoramento/tree/main/Zabbix/Templates/Fiberhome/OLT_AN5116-06B
         
         VISÃO GERAL
         Feito algumas alterações na parte dos templates para adaptar a OLT Fiberhome AN5116-06B.
-        
+                
         COMANDOS NECESSÁRIOS PARA SEREM EXECUTADOS NA OLT
         FIRMWARE RP0700
         Admin# cd device
         Admin\device# set mib performance switch enable
         Admin# cd gponlinecard
         Admin\gponlinecard# set pon_traffic_sts switch opt enable 5 0 rtt enable 5 0 traffic enable 5 0
-        
+                
         FIRMWARE RP1000/RP1200
         Admin# cd maintenance
         Admin\maintenance# cd performance
